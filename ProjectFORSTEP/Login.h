@@ -1,75 +1,117 @@
 #pragma once
 #include"MENU.h"
 
+using namespace std::experimental::filesystem;
+
 	class login
 	{
 	protected:
 		
 	public:
-		virtual void result() = 0;
 		virtual void resultsearch() = 0;
-		virtual void changepass() = 0;
+		virtual void changepassword() = 0;
 		// здесь нужны гетеры и сетеры, такие как фио телефон и тд
 	};
 
 	class guest : public login
 	{
 	public:
+		
 		/*void registration();*/
 		void dotask();
-		virtual void changepass() override
-		{
-			//bool b;
-			//bool chpass = false;
-			//while (b != 1 && chpass != true)
-			//{
-			//	
-			//	cout << "Do you really want to change your pass?" << endl;
-			//	cout << "Enter 0 to agree or 1 to disagree." << endl;
-			//	cin >> b;
-			//	if (b == 0)
-			//	{
-			//		remove("adminpass.txt");
-			//		// plus add new pass with shifr
-			//		bool chpass = true;
-			//	}
-			//	else if (b == 1)
-			//	{
-			//		cout << "Recent to mainmenu." << endl;
-			//	}
-			//}
-		}
-		virtual void resultsearch() override
-		{
-			/*printAll();
-			cout << endl;
-			string log;
-			cout << "Enter the number of a car : ";
-			cin >> log;
-			List<Protocol*>* list = base.get(num);
-			list->print();
-			system("pause");*/
+		virtual void changepassword() override;
+		//{
+		//	//bool b;
+		//	//bool chpass = false;
+		//	//while (b != 1 && chpass != true)
+		//	//{
+		//	//	
+		//	//	cout << "Do you really want to edit your pass?" << endl;
+		//	//	cout << "Enter 0 to agree or 1 to disagree." << endl;
+		//	//	cin >> b;
+		//	//	if (b == 0)
+		//	//	{
+		//	//		remove("adminpass.txt");
+		//	//		// plus add new pass with shifr
+		//	//		bool chpass = true;
+		//	//	}
+		//	//	else if (b == 1)
+		//	//	{
+		//	//		cout << "Recent to mainmenu." << endl;
+		//	//	}
+		//	//}
+		//}
+		virtual void resultsearch() override;
+		//{
+		//	/*printAll();
+		//	cout << endl;
+		//	string log;
+		//	cout << "Enter the number of a car : ";
+		//	cin >> log;
+		//	List<Protocol*>* list = base.get(num);
+		//	list->print();
+		//	system("pause");*/
 	
-		}
+		//}
 	};
+
+	inline void guest::dotask()
+	{
+
+	}
+
+	inline void guest::changepassword()
+	{
+		//bool b;
+		//	//bool chpass = false;
+		//	//while (b != 1 && chpass != true)
+		//	//{
+		//	//	
+		//	//	cout << "Do you really want to edit your pass?" << endl;
+		//	//	cout << "Enter 0 to agree or 1 to disagree." << endl;
+		//	//	cin >> b;
+		//	//	if (b == 0)
+		//	//	{
+		//	//		remove("adminpass.txt");
+		//	//		// plus add new pass with shifr
+		//	//		bool chpass = true;
+		//	//	}
+		//	//	else if (b == 1)
+		//	//	{
+		//	//		cout << "Recent to mainmenu." << endl;
+		//	//	}
+		//	//}
+	}
+
+	inline void guest::resultsearch()
+	{
+		/*printAll();
+		//	cout << endl;
+		//	string log;
+		//	cout << "Enter the number of a car : ";
+		//	cin >> log;
+		//	List<Protocol*>* list = base.get(num);
+		//	list->print();
+		//	system("pause");*/
+	}
 
 
 
 	class admin : public login
 	{
 		/*bool logintrue = false;*/
+		
 	public:
-		void changeguest(); //создавать в разные файлы новых кентиков, а потом удалять, номер который не нужен
+
+		void editguest(); //создавать в разные файлы новых кентиков, а потом удалять, номер который не нужен
 		void deleteguest(); //просто удалить по номеру кента
-		void changetask(); //удалить тест, а потом добавить его вновь
-		void donewtask(); // добавление нового задание, через стринг текст теста, потом ответ и так каждая строка, чтобы можнео было считать тест
-		virtual void changepass() override;
+		virtual void changepassword() override;
 		/*bool checkpass();*/
-		virtual void result() override;
+		void result();
 		virtual void resultsearch() override;
 	};
 
-	inline void admin::changeguest()
+	inline void admin::editguest()
 	{
 	}
 
@@ -77,22 +119,15 @@
 	{
 	}
 
-	inline void admin::changetask()
-	{
-	}
 
-	inline void admin::donewtask()
-	{
-	}
-
-	inline void admin::changepass()
+	inline void admin::changepassword()
 	{
 		//bool b;
 		//bool chpass = false;
 		//while (b != 1 && chpass != true)
 		//{
 		//	
-		//	cout << "Do you really want to change your pass?" << endl;
+		//	cout << "Do you really want to edit your pass?" << endl;
 		//	cout << "Enter 0 to agree or 1 to disagree." << endl;
 		//	cin >> b;
 		//	if (b == 0)
@@ -142,14 +177,34 @@ class Task
 {
 	//alltask
 public:
-	void newtask();
+	void newtask(); // добавление нового задание, через стринг текст теста, потом ответ и так каждая строка, чтобы можнео было считать тест
 	void task();
-	void edittask();
+	void edittask(); //удалить тест, а потом добавить его вновь
 
 	void deletetask();
-	void newcategory();
-	void category();
+	/*void newcategory();*/// тоесть новая папка с опреденными заданиями.
+	/*void category();*/
 };
+
+inline void Task::newtask()
+{
+	// проверка на существование уже таких категорий
+	cout << "Do new category of test" << endl; //Например тесты по школьным предметам
+	path p;
+	cin >> p;
+	create_directory(p);
+	cout << "What the new academic subject?" << endl; //Например тесты по математике
+	path s;
+	cin >> s;
+	create_directory(s);
+
+
+}
+
+inline void Task::edittask()
+{
+	system("pause");
+}
 
 
 

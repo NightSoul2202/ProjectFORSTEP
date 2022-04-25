@@ -95,14 +95,15 @@ inline void MENU::menuforadmin()
 		cout << "\t\t      ## #### ## #####   ## ## ## ##    ##" << endl;
 		cout << "\t\t      ##  ##  ## ##      ##  #### ##    ##" << endl;
 		cout << "\t\t      ##      ## ####### ##   ###  ###### " << endl;
-		vector<string> v = { "Edit task", "Edit guest", "Change password", "Print all result", "Search result", "Back" };
+		vector<string> v = { "Edit task", "New task", "Edit guest", "Change password", "Print all result", "Search result", "Back" };
 		Menu m;
 		int menu = m.select_vertical(v) + 1;
-	
+		Task t;
+		admin a;
 		switch (menu)
 		{
-		case 1: system("cls"); /*edittask();*/ break;
-		case 2: system("cls"); /*editquest();*/ break;
+		case 1: system("cls"); t.edittask(); break;
+		case 2: system("cls"); t.newtask(); break;
 		case 3: system("cls"); /*editquest();*/ break;
 		case 4: system("cls"); /*editquest();*/ break;
 		case 5: system("cls"); /*changepassword();*/ break;
@@ -124,13 +125,15 @@ inline void MENU::menuforguest()
 	cout << "\t\t      ##      ## ####### ##   ###  ###### " << endl;
 	vector<string> v = { "Do task", "Check result", "Change password", "Back" };
 	Menu m;
+
 	int menu = m.select_vertical(v) + 1;
+	guest g;
 
 	switch (menu)
 	{
-	case 1: system("cls"); /*dotask();*/ break;
-	case 2: system("cls"); /*result();*/ break;
-	case 3: system("cls"); /*changepassword();*/ break;
+	case 1: system("cls"); /*g.dotask();*/ break;
+	case 2: system("cls"); /*g.resultsearch();*/ break;
+	case 3: system("cls"); /*g.changepassword();*/ break;
 	case 4: mainmenu(); break;
 	}
 	}
