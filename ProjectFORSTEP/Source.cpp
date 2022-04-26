@@ -4,6 +4,7 @@
 #include<fstream>
 #include<experimental/filesystem>
 #include<map>
+#include<list>
 #include"Login.h"
 
 using namespace std;
@@ -24,8 +25,8 @@ public:
 	void mainmenu();
 	void menuforadmin();
 	void menuforguest();
-	void enterAdmin();
-	void enterGuest();
+	/*void enterAdmin();
+	void enterGuest();*/
 };
 
 void MENU::mainmenu()
@@ -74,11 +75,12 @@ void MENU::mainmenu()
 		vector<string> v = { "Admin", "Guest", "Exit" };
 		Menu m;
 		int menu = m.select_vertical(v) + 1;
-
+		admin a;
+		guest g;
 		switch (menu)
 		{
-		case 1: system("cls"); enterAdmin(); break;
-		case 2: system("cls"); enterGuest(); break;
+		case 1: system("cls"); a.enter(); menuforadmin(); break;
+		case 2: system("cls"); g.enter(); menuforguest(); break;
 		case 3: exit(0); break;
 		}
 	}
@@ -107,7 +109,8 @@ inline void MENU::menuforadmin()
 		case 3: system("cls"); /*editquest();*/ break;
 		case 4: system("cls"); /*editquest();*/ break;
 		case 5: system("cls"); /*changepassword();*/ break;
-		case 6: mainmenu(); break;
+		case 6: system("cls"); /*changepassword();*/ break;
+		case 7: mainmenu(); break;
 		}
 	}
 }
@@ -139,97 +142,8 @@ inline void MENU::menuforguest()
 	}
 }
 
-inline void MENU::enterAdmin()
-{
-	ifstream in("adminpass.txt");
-	if (in.is_open())
-	{
-		int ras = 0;
-		while (ras != 5 /*&& или пока не будет правильные парольи и логин*/)
-		{
-			string l, p;
-			cout << "Hello, please, enter your login and password" << endl;
-			cout << endl;
-			cout << "Login : ";
-			cin >> l;
-			cout << endl;
-			cout << "Password : ";
-			cin >> p;
-			ras++;
-
-			/*printAll();
-			cout << endl;
-			string log;
-			cout << "Enter the number of a car : ";
-			cin >> log;
-			List<Protocol*>* list = base.get(num);
-			list->print();
-			system("pause");*/
-		}
-		if (ras > 5)
-		{
-			//если попыток больше 5 выдать ошибку и отправить в меню
-			mainmenu();
-		}
-		menuforadmin();
-	}
-	else
-	{
-		bool s;
-		cout << "You aren`t have admin account, do you want to add admin account?" << endl;
-		cout << "Warnings! If you forgot your pass or login, call to your it admin to change pass." << endl;
-		cout << "You can do only one account, in future you will can change pass and login." << endl;
-		cout << "Write 1 to do account, or 0 to leave." << endl;
-		cin >> s;
-		if (s == true)
-		{
-			/*string l, p;
-			cout << "Hello, please, enter your login and password" << endl;
-			cout << endl;
-			cout << "Login : ";
-			cin >> l;
-			cout << endl;
-			cout << "Password : ";
-			cin >> p;
-			ofstream out("adminpass.txt", ios::app);
-			out << prot->getNumTS() << endl;
-			out << prot->getdate() << endl;
-			out << prot->getsum() << endl;
-			out.close();*/
-			menuforadmin();
-		}
-		else
-		{
-			mainmenu();
-		}
-	}
-
-
-	//Check for trust enter
-	//if(trustcheck == 1)
-	//{
-	//	menuforadmin();
-	// 	system("cls");
-	//}
-}
-
-void MENU::enterGuest()
-{
-	bool bb;
-	cout << "Do you want to registration or login?" << endl;
-	cout << "Enter 1 to registration or 0 to login : ";
-	cin >> bb;
-	if (bb == 1)
-	{
-		//регистрация с использорванием фио, телефона, улицы. Сохранение в отдельный файл с названием, которое укажет в логине
-		menuforguest();
-	}
-	else if (bb == 0)
-	{
-		//Логиниться, по логину искать файл, в папке гостей, если нет, выдать ошибку, и после 5 попыток отправить в мейн меню. Елси нашел то в меню для гостей
-		menuforguest();
-	}
-}
+//
+//
 
 int main()
 {
@@ -237,3 +151,108 @@ int main()
 	m.mainmenu();
 	system("pause");
 }
+
+
+
+
+
+
+
+//inline void MENU::enterAdmin()
+//{
+//	ifstream in("adminpass.txt");
+//	if (in.is_open())
+//	{
+//		int ras = 0;
+//		while (ras != 5 /*&&*/ )				//или пока не будет правильные парольи и логин*/)
+//		{
+//			string l, p;
+//			cout << "Hello, please, enter your login and password" << endl;
+//			cout << endl;
+//			cout << "Login : ";
+//			cin >> l;
+//			cout << endl;
+//			cout << "Password : ";
+//			cin >> p;
+//			ras++;
+//
+//
+//			/*printAll();
+//			cout << endl;
+//			string log;
+//			cout << "Enter the number of a car : ";
+//			cin >> log;
+//			List<Protocol*>* list = base.get(num);
+//			list->print();
+//			system("pause");*/
+//		}
+//		if (ras > 5)
+//		{
+//			//если попыток больше 5 выдать ошибку и отправить в меню
+//			mainmenu();
+//		}
+//		menuforadmin();
+//	}
+//	else
+//	{
+//		bool s;
+//		cout << "You aren`t have admin account, do you want to add admin account?" << endl;
+//		cout << "Warnings! If you forgot your pass or login, call to your it admin to change pass." << endl;
+//		cout << "You can do only one account, in future you will can change pass and login." << endl;
+//		cout << "Write 1 to do account, or 0 to leave." << endl;
+//		cin >> s;
+//		if (s == true)
+//		{
+//			string l, p;
+//			cout << "Hello, please, enter your login and password" << endl;
+//			cout << endl;
+//			cout << "Login : ";
+//			cin >> l;
+//			cout << endl;
+//			cout << "Password : ";
+//			cin >> p;
+//			ofstream out("adminpass.txt", ios::app);
+//			//out << prot->getNumTS() << endl;
+//			//out << prot->getdate() << endl;
+//			//out << prot->getsum() << endl;
+//			out.close();
+//			menuforadmin();
+//		}
+//		else
+//		{
+//			mainmenu();
+//		}
+//	}
+//
+//
+//	//Check for trust enter
+//	//if(trustcheck == 1)
+//	//{
+//	//	menuforadmin();
+//	// 	system("cls");
+//	//}
+//}
+// 
+// 
+// 
+// 
+// 
+// 
+// 
+//void MENU::enterGuest()
+//{
+//	bool bb;
+//	cout << "Do you want to registration or login?" << endl;
+//	cout << "Enter 1 to registration or 0 to login : ";
+//	cin >> bb;
+//	if (bb == 1)
+//	{
+//		//регистрация с использорванием фио, телефона, улицы. Сохранение в отдельный файл с названием, которое укажет в логине
+//		menuforguest();
+//	}
+//	else if (bb == 0)
+//	{
+//		//Логиниться, по логину искать файл, в папке гостей, если нет, выдать ошибку, и после 5 попыток отправить в мейн меню. Елси нашел то в меню для гостей
+//		menuforguest();
+//	}
+//}
