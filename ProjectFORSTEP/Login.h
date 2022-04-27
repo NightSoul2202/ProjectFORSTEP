@@ -8,6 +8,7 @@ using namespace std::experimental::filesystem;
 	protected:
 		string log;
 		string pass;
+		
 	public:
 		login() {};
 		~login() {};
@@ -15,11 +16,13 @@ using namespace std::experimental::filesystem;
 		virtual void resultsearch() = 0;
 		virtual void changepassword() = 0;
 		
+		
 		string getpass() { return this->pass; }
 		string getlogin() { return this->log; }
 		void setpass(string setpass) { pass = setpass; }
 		void setlogin(string setlogin) { log = setlogin; }
 
+	
 		// здесь нужны гетеры и сетеры, такие как фио телефон и тд
 	};
 
@@ -30,6 +33,7 @@ using namespace std::experimental::filesystem;
 		~guest() {};
 		/*void registration();*/
 		void dotask();
+		string gettxtname() { return txtname; }
 		void load()
 		{
 			/*ifstream in("guest.txt");
@@ -66,6 +70,9 @@ using namespace std::experimental::filesystem;
 		virtual void changepassword() override;
 		virtual void enter() override;
 		virtual void resultsearch() override;
+	private:
+		string txtname;
+
 		
 	};
 
@@ -99,7 +106,113 @@ using namespace std::experimental::filesystem;
 
 	inline void guest::enter()
 	{
-		system("pause");
+		unique_ptr<guest> gu(new guest);
+		cout << "Hello, please, enter your login and password" << endl;
+		cout << endl;
+		cout << "Login : "; // добавить в папку с пользователями, чтобы файл с админом не трогали.
+		cin >> gu->log;
+		string checktxt = gu->log + ".txt";
+		ifstream in(checktxt);
+		if (in.is_open())
+		{
+				bool check = false;
+				int ras = 0;
+				int count = 0;
+				string passcheck, logcheck;
+				while (!in.eof())
+				{
+					if (count)
+						getline(in, passcheck);
+					else
+						getline(in, logcheck);
+					count++;
+				}
+				in.close();
+				while (ras != 5 && check != true)
+				{
+					cout << endl;
+					cout << "Password : ";
+					cin >> gu->pass;
+					ras++;
+
+					if (gu->pass == passcheck && gu->log == logcheck)
+					{
+						check = true;
+					}
+					else
+					{
+						cout << endl;
+						cout << "______________________________________" << endl;
+						cout << endl;
+						cout << "Wrong pass or login. Please try again." << endl;
+						cout << "______________________________________" << endl;
+						cout << endl;
+						cout << endl;
+						cout << "You have : " << 5 - ras << " attempts." << endl;
+						cout << endl;
+						system("pause");
+						system("cls");
+					}
+				}
+				if (ras > 4)
+				{
+					//если попыток больше 5 выдать ошибку и отправить в меню
+					cout << "Sorry, but you had to much wrong attempts, try again later." << endl;
+					cout << "Perhaps the user with this login is already taken. Try to enter a different login" << endl;
+					system("pause");
+					exit(0);
+					/*mainmenu();*/
+				}
+		}
+		else
+		{
+			
+			system("cls");
+			bool s;
+			cout << "account registration. Take the steps you need. Remember all data." << endl;
+			cout << "Replacement of data is possible when you confirm the necessary data." << endl;
+			cout << "Enter \"1\" to continue registration, or \"0\" to exit" << endl;
+			cin >> s;
+			if (s == true)
+			{
+				bool ch1 = false;
+				while (ch1 != true)
+				{
+					system("cls");
+					string l, p;
+					cout << "Hello, please, enter your login and password" << endl;
+					cout << endl;
+					cout << "Login : ";
+					cin >> l;
+					cout << endl;
+					cout << "Password : ";
+					cin >> p;
+					ifstream inf(l + ".txt");
+					if (inf.is_open())
+					{
+						cout << "______________________________________________" << endl;
+						cout << endl;
+						cout << "This login already taken. Enter another login." << endl;
+						cout << "______________________________________________" << endl;
+						cout << endl;
+						system("pause");
+					}
+					else
+					{
+						ch1 = true;
+						string path = l + ".txt";
+						ofstream out(path);
+						out << l << endl;
+						out << p;
+						out.close();
+					}
+				}
+			}
+			else
+			{
+				exit(0);/*mainmenu();*/
+			}
+		}
 	}
 
 	inline void guest::resultsearch()
@@ -268,7 +381,6 @@ using namespace std::experimental::filesystem;
 				exit(0);/*mainmenu();*/
 			}
 		}
-		system("pause");
 	}
 
 	inline void admin::resultsearch()
