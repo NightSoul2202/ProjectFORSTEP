@@ -116,61 +116,61 @@ using namespace std::experimental::filesystem;
 		if (in.is_open())
 		{
 			system("cls");
-				bool check = false;
-				int ras = 0;
-				int count = 0;
-				string passcheck, logcheck;
-				while (!in.eof())
+			bool check = false;
+			int ras = 0;
+			int count = 0;
+			string passcheck, logcheck;
+			while (!in.eof())
+			{
+				while (count != 2)
 				{
-					while (count != 2)
-					{
-						if (count == 1)
-							getline(in, passcheck);
-						else if (count == 0)
-							getline(in, logcheck);
-						count++;
-					}
-					break;
+					if (count == 1)
+						getline(in, passcheck);
+					else if (count == 0)
+						getline(in, logcheck);
+					count++;
 				}
-				in.close();
-				while (ras != 5 && check != true)
-				{
-					cout << "Hello, please, enter your login and password" << endl;
-					cout << endl;
-					cout << "Login : " << gu->log << endl;
-					cout << endl;
-					cout << "Password : ";
-					cin >> gu->pass;
-					ras++;
+				break;
+			}
+			in.close();
+			while (ras != 5 && check != true)
+			{
+				cout << "Hello, please, enter your login and password" << endl;
+				cout << endl;
+				cout << "Login : " << gu->log << endl;
+				cout << endl;
+				cout << "Password : ";
+				cin >> gu->pass;
+				ras++;
 
-					if (gu->pass == passcheck && gu->log == logcheck)
-					{
-						check = true;
-					}
-					else
-					{
-						cout << endl;
-						cout << "______________________________________" << endl;
-						cout << endl;
-						cout << "Wrong pass or login. Please try again." << endl;
-						cout << "______________________________________" << endl;
-						cout << endl;
-						cout << endl;
-						cout << "You have : " << 5 - ras << " attempts." << endl;
-						cout << endl;
-						system("pause");
-						system("cls");
-					}
-				}
-				if (ras > 4)
+				if (gu->pass == passcheck && gu->log == logcheck)
 				{
-					//если попыток больше 5 выдать ошибку и отправить в меню
-					cout << "Sorry, but you had to much wrong attempts, try again later." << endl;
-					cout << "Perhaps the user with this login is already taken. Try to enter a different login" << endl;
-					system("pause");
-					exit(0);
-					/*mainmenu();*/
+					check = true;
 				}
+				else
+				{
+					cout << endl;
+					cout << "______________________________________" << endl;
+					cout << endl;
+					cout << "Wrong pass or login. Please try again." << endl;
+					cout << "______________________________________" << endl;
+					cout << endl;
+					cout << endl;
+					cout << "You have : " << 5 - ras << " attempts." << endl;
+					cout << endl;
+					system("pause");
+					system("cls");
+				}
+			}
+			if (ras > 4)
+			{
+				//если попыток больше 5 выдать ошибку и отправить в меню
+				cout << "Sorry, but you had to much wrong attempts, try again later." << endl;
+				cout << "Perhaps the user with this login is already taken. Try to enter a different login" << endl;
+				system("pause");
+				exit(0);
+				/*mainmenu();*/
+			}
 		}
 		else
 		{
