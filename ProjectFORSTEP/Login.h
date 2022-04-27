@@ -115,21 +115,29 @@ using namespace std::experimental::filesystem;
 		ifstream in(checktxt);
 		if (in.is_open())
 		{
+			system("cls");
 				bool check = false;
 				int ras = 0;
 				int count = 0;
 				string passcheck, logcheck;
 				while (!in.eof())
 				{
-					if (count)
-						getline(in, passcheck);
-					else
-						getline(in, logcheck);
-					count++;
+					while (count != 2)
+					{
+						if (count == 1)
+							getline(in, passcheck);
+						else if (count == 0)
+							getline(in, logcheck);
+						count++;
+					}
+					break;
 				}
 				in.close();
 				while (ras != 5 && check != true)
 				{
+					cout << "Hello, please, enter your login and password" << endl;
+					cout << endl;
+					cout << "Login : " << gu->log << endl;
 					cout << endl;
 					cout << "Password : ";
 					cin >> gu->pass;
