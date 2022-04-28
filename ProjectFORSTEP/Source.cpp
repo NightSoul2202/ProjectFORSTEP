@@ -1,3 +1,4 @@
+#define _CRT_SECURE_NO_WARNINGS
 #define _SILENCE_EXPERIMENTAL_FILESYSTEM_DEPRECATION_WARNING
 #include<iostream>
 #include<string>
@@ -5,6 +6,7 @@
 #include<experimental/filesystem>
 #include<map>
 #include<list>
+#include"md5.h"
 #include"Login.h"
 
 using namespace std;

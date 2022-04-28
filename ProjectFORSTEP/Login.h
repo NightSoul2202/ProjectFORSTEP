@@ -8,7 +8,11 @@ using namespace std::experimental::filesystem;
 	protected:
 		string log;
 		string pass;
-		
+		string folder = "LoginAccounts";
+		string UserStat = "UserStat";
+		/*string UsersFolder = "UsersFolder";
+		string StudentsFile = "StudentsFile.txt";*/
+
 	public:
 		login() {};
 		~login() {};
@@ -106,12 +110,15 @@ using namespace std::experimental::filesystem;
 
 	inline void guest::enter()
 	{
+
 		unique_ptr<guest> gu(new guest);
 		cout << "Hello, please, enter your login and password" << endl;
 		cout << endl;
 		cout << "Login : "; // добавить в папку с пользователями, чтобы файл с админом не трогали.
 		cin >> gu->log;
-		string checktxt = gu->log + ".txt";
+		string loginhash;
+		loginhash = md5(gu->log);
+		string checktxt = gu->folder + "/" + loginhash + ".txt";
 		ifstream in(checktxt);
 		if (in.is_open())
 		{
@@ -141,9 +148,11 @@ using namespace std::experimental::filesystem;
 				cout << endl;
 				cout << "Password : ";
 				cin >> gu->pass;
+				string passhash;
+				passhash = md5(gu->pass);
 				ras++;
 
-				if (gu->pass == passcheck && gu->log == logcheck)
+				if (passhash == passcheck && loginhash == logcheck)
 				{
 					check = true;
 				}
@@ -174,10 +183,9 @@ using namespace std::experimental::filesystem;
 		}
 		else
 		{
-			
 			system("cls");
 			bool s;
-			cout << "account registration. Take the steps you need. Remember all data." << endl;
+			cout << "Account registration. Take the steps you need. Remember all data." << endl;
 			cout << "Replacement of data is possible when you confirm the necessary data." << endl;
 			cout << "Enter \"1\" to continue registration, or \"0\" to exit" << endl;
 			cin >> s;
@@ -192,10 +200,40 @@ using namespace std::experimental::filesystem;
 					cout << endl;
 					cout << "Login : ";
 					cin >> l;
+
+					/*string path = this->folder + "/" + md5(l) + ".txt";*/
+
+					string loginhash;
+					loginhash = md5(l);
 					cout << endl;
 					cout << "Password : ";
 					cin >> p;
-					ifstream inf(l + ".txt");
+					cin.ignore();
+					cout << endl;
+					string passhash;
+					passhash = md5(p);
+					cout << "FIO : ";
+					string fio;
+					getline(cin, fio);
+					cout << endl;
+					cout << "Telephone number : +";
+					string tel;
+					getline(cin, tel);
+					cout << endl;
+					cout << "Home address : ";
+					string address;
+					getline(cin, address);
+					ifstream i(gu->folder);
+					if (i.is_open())
+					{
+						break; // Возможна проблема
+					}
+					else
+					{
+						create_directory(gu->folder);
+						create_directory(gu->UserStat);
+					}
+					ifstream inf(gu->folder + "/" + loginhash + ".txt");
 					if (inf.is_open())
 					{
 						cout << "______________________________________________" << endl;
@@ -208,11 +246,21 @@ using namespace std::experimental::filesystem;
 					else
 					{
 						ch1 = true;
-						string path = l + ".txt";
+						string path = gu->folder + "/" + loginhash + ".txt";
 						ofstream out(path);
-						out << l << endl;
-						out << p;
+						out << loginhash << endl;
+						out << passhash << endl;
+						out << fio;
 						out.close();
+						string path1 = gu->UserStat + "/" + "UserInfo.txt";
+						ofstream uout(path1, ios::app);
+						uout << tel << "\n" << "FIO : " << fio << " Home address : " << address << "\n";
+						uout.close();
+						string path2 = gu->UserStat + "/" + "DatabaseStudents.txt";
+						ofstream dout(path2, ios::app);
+						dout << tel << "\n" << fio << ". Login : " << l << "\n";
+						dout.close();
+						create_directory(gu->UserStat + "/" + l);
 					}
 				}
 			}
@@ -314,11 +362,15 @@ using namespace std::experimental::filesystem;
 			string passcheck, logcheck;
 			while (!in.eof())
 			{
-				if (count)
-					getline(in, passcheck);
-				else
-					getline(in, logcheck);
-				count++;
+				while (count != 2)
+				{
+					if (count == 1)
+						getline(in, passcheck);
+					else if (count == 0)
+						getline(in, logcheck);
+					count++;
+				}
+				break;
 			}
 			in.close();
 			while (ras != 5 && check!= true)
@@ -327,12 +379,16 @@ using namespace std::experimental::filesystem;
 				cout << endl;
 				cout << "Login : ";
 				cin >> ad->log;
+				string loginhash;
+				loginhash = md5(ad->log);
 				cout << endl;
 				cout << "Password : ";
 				cin >> ad->pass;
+				string passhash;
+				passhash = md5(ad->pass);
 				ras++;
 				
-				if (ad->pass == passcheck && ad->log == logcheck)
+				if (passhash == passcheck && loginhash == logcheck)
 				{
 					check = true;
 				}
@@ -375,12 +431,16 @@ using namespace std::experimental::filesystem;
 				cout << endl;
 				cout << "Login : ";
 				cin >> l;
+				string loginhash;
+				loginhash = md5(l);
 				cout << endl;
 				cout << "Password : ";
 				cin >> p;
+				string passhash;
+				passhash = md5(p);
 				ofstream out("admin.txt");
-				out << l << endl;
-				out << p;
+				out << loginhash << endl;
+				out << passhash;
 				out.close();
 				
 			}
