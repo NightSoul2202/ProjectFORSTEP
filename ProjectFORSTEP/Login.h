@@ -10,6 +10,8 @@ using namespace std::experimental::filesystem;
 		string pass;
 		string folder = "LoginAccounts";
 		string UserStat = "UserStat";
+		string TestFolder = "TestFolder";
+		string emptyFile = "emptyFile.txt"; //Хитрый, пустой файл благодаря которому мы можем проверять, можно ли открыть папку.(Существует ли она)
 		/*string UsersFolder = "UsersFolder";
 		string StudentsFile = "StudentsFile.txt";*/
 
@@ -233,6 +235,7 @@ using namespace std::experimental::filesystem;
 						create_directory(gu->folder);
 						create_directory(gu->UserStat);
 					}
+					i.close();
 					ifstream inf(gu->folder + "/" + loginhash + ".txt");
 					if (inf.is_open())
 					{
@@ -262,6 +265,7 @@ using namespace std::experimental::filesystem;
 						dout.close();
 						create_directory(gu->UserStat + "/" + l);
 					}
+					inf.close();
 				}
 			}
 			else
@@ -287,11 +291,11 @@ using namespace std::experimental::filesystem;
 
 	class admin : public login
 	{
-		/*bool logintrue = false;*/
-		map<string, list<login*>> mp;
 	public:
 		admin() {};
 		~admin() {};
+
+		void addCategory();
 		void editguest(); //создавать в разные файлы новых кентиков, а потом удалять, номер который не нужен
 		void deleteguest(); //просто удалить по номеру кента
 		virtual void changepassword() override;
@@ -300,6 +304,77 @@ using namespace std::experimental::filesystem;
 		virtual void enter() override;
 		virtual void resultsearch() override;
 	};
+
+	inline void admin::addCategory()
+	{
+		unique_ptr<admin> ad(new admin);
+		map<string, string> mp;
+		string key, category;
+		int count = 0;
+		ifstream ifq(ad->TestFolder + "/" + "category.txt");
+		if (ifq.is_open())
+		{
+			while (!ifq.eof())
+			{
+				getline(ifq, key);
+				getline(ifq, category);
+
+				if (key != "")
+					mp[key] = category;
+				count++;
+			}
+			count--;
+		}
+		else
+		{
+			cout << "You have not added category yet. File has been added." << endl;
+			cout << endl;
+			create_directory(ad->TestFolder);
+			ofstream ofs(ad->TestFolder + "/" + "category.txt");
+		}
+		ifq.close();
+		bool ch2 = false;
+		while (ch2 != true)
+		{
+			if (mp.size())
+			{
+				cout << "List categories that have been added : " << endl;
+				cout << endl;
+				for (auto i = mp.begin(); i != mp.end(); ++i)
+				{
+					cout << i->first << ". " << i->second << endl;
+				}
+				cout << endl;
+			}
+			cout << "Add new category. Please enter a test category name." << endl;
+			cin >> category;
+			ifstream ifw(ad->TestFolder + "/" + category + "/" + ad->emptyFile);
+			if (ifw.is_open())
+			{
+				cout << "________________________________________________" << endl;
+				cout << endl;
+				cout << "This category is already in the list. Try again." << endl;
+				cout << "________________________________________________" << endl;
+				cout << endl;
+				system("pause");
+				ifw.close();
+				system("cls");
+			}
+			else
+			{
+				ch2 = true;
+				ofstream ofq(ad->TestFolder + "/" + "category.txt", ios::app);
+				ofq << ++count << endl;
+				ofq << category << endl;
+				ofq.close();
+				create_directory(ad->TestFolder + "/" + category + "/");
+				ofstream emp(ad->TestFolder + "/" + category + "/" + ad->emptyFile);
+				emp.close();
+				system("pause");
+			}
+		}
+		
+	}
 
 	inline void admin::editguest()
 	{
@@ -463,40 +538,6 @@ using namespace std::experimental::filesystem;
 	//	system("pause");*/
 	//	return true;
 	}
-
-class Task
-{
-	//alltask
-public:
-	void newtask(); // добавление нового задание, через стринг текст теста, потом ответ и так каждая строка, чтобы можнео было считать тест
-	void task();
-	void edittask(); //удалить тест, а потом добавить его вновь
-
-	void deletetask();
-	/*void newcategory();*/// тоесть новая папка с опреденными заданиями.
-	/*void category();*/
-};
-
-inline void Task::newtask()
-{
-	// проверка на существование уже таких категорий
-	cout << "Do new category of test" << endl; //Например тесты по школьным предметам
-	path p;
-	cin >> p;
-	create_directory(p);
-	cout << "What the new academic subject?" << endl; //Например тесты по математике
-	path s;
-	cin >> s;
-	create_directory(s);
-
-
-}
-
-inline void Task::edittask()
-{
-	system("pause");
-}
-
 
 
 
