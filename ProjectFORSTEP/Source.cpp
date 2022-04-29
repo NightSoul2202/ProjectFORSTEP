@@ -1,4 +1,3 @@
-#pragma execution_character_set("utf-8")
 #define _CRT_SECURE_NO_WARNINGS
 #define _SILENCE_EXPERIMENTAL_FILESYSTEM_DEPRECATION_WARNING
 #include<iostream>
