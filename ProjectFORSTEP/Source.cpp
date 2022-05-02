@@ -1,6 +1,7 @@
 #define _CRT_SECURE_NO_WARNINGS
 #define _SILENCE_EXPERIMENTAL_FILESYSTEM_DEPRECATION_WARNING
 #include<iostream>
+#include<windows.h>
 #include<string>
 #include<fstream>
 #include<experimental/filesystem>
@@ -99,15 +100,15 @@ inline void MENU::menuforadmin()
 		cout << "\t\t      ## #### ## #####   ## ## ## ##    ##" << endl;
 		cout << "\t\t      ##  ##  ## ##      ##  #### ##    ##" << endl;
 		cout << "\t\t      ##      ## ####### ##   ###  ###### " << endl;
-		vector<string> v = { "Add Catagory", "New task", "Edit guest", "Change password", "Print all result", "Search result", "Back" };
+		vector<string> v = { "Add Catagory", "Add new test", "Add new test name", "Change password", "Print all result", "Search result", "Back" };
 		Menu m;
 		int menu = m.select_vertical(v) + 1;
 		admin a;
 		switch (menu)
 		{
 		case 1: system("cls"); a.addCategory(); break;
-		case 2: system("cls"); /*t.newtask();*/ break;
-		case 3: system("cls"); /*editquest();*/ break;
+		case 2: system("cls"); a.addtest(); break;
+		case 3: system("cls"); a.addnameoftest(); break;
 		case 4: system("cls"); /*editquest();*/ break;
 		case 5: system("cls"); /*changepassword();*/ break;
 		case 6: system("cls"); /*changepassword();*/ break;

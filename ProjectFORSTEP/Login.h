@@ -3,6 +3,21 @@
 
 using namespace std::experimental::filesystem;
 
+void gotoxy(int, int);
+
+	class gotomenu //мусоргный класс, чтобы переходить в главное меню.
+	{
+	public:
+		void go()
+		{
+			system("cls");
+			int gotx = 10;
+			gotoxy(30, ++gotx);
+			cout << "Ok. Go to main menu.";
+			Sleep(2000);
+		}
+	};
+
 	class login
 	{
 	protected:
@@ -12,6 +27,8 @@ using namespace std::experimental::filesystem;
 		string UserStat = "UserStat";
 		string TestFolder = "TestFolder";
 		string emptyFile = "emptyFile.txt"; //Хитрый, пустой файл благодаря которому мы можем проверять, можно ли открыть папку.(Существует ли она)
+		string testname = "testname.txt";
+
 		/*string UsersFolder = "UsersFolder";
 		string StudentsFile = "StudentsFile.txt";*/
 
@@ -296,6 +313,8 @@ using namespace std::experimental::filesystem;
 		~admin() {};
 
 		void addCategory();
+		void addnameoftest();
+		void addtest();
 		void editguest(); //создавать в разные файлы новых кентиков, а потом удалять, номер который не нужен
 		void deleteguest(); //просто удалить по номеру кента
 		virtual void changepassword() override;
@@ -331,6 +350,7 @@ using namespace std::experimental::filesystem;
 			cout << endl;
 			create_directory(ad->TestFolder);
 			ofstream ofs(ad->TestFolder + "/" + "category.txt");
+			ofs.close();//
 		}
 		ifq.close();
 		bool ch2 = false;
@@ -374,6 +394,286 @@ using namespace std::experimental::filesystem;
 			}
 		}
 		
+	}
+
+	inline void admin::addnameoftest()
+	{
+		unique_ptr<admin> ad(new admin);
+		map<string, string> mp;
+		string key, category;
+		int count = 0;
+		ifstream ifq(ad->TestFolder + "/" + "category.txt");
+		if (ifq.is_open())
+		{
+			while (!ifq.eof())
+			{
+				getline(ifq, key);
+				getline(ifq, category);
+
+				if (key != "")
+					mp[key] = category;
+				count++;
+			}
+			count--;
+			ifq.close();
+		}
+		else
+		{
+			cout << "You have not added category yet." << endl;
+			cout << "Do you want to add new category? (yes = 1 / no = 0)" << endl;
+			bool yy;
+			cin >> yy;
+			if (yy == 1)
+			{
+				addCategory();
+			}
+			else
+			{
+				gotomenu g;
+				g.go();
+			}
+		}
+		if (mp.size())
+		{
+			cout << "List categories that have been added : " << endl;
+			cout << endl;
+			for (auto i = mp.begin(); i != mp.end(); ++i)
+			{
+				cout << i->first << ". " << i->second << endl;
+			}
+			cout << endl;
+
+			cout << "Enter the category number in which you want to add a new test name." << endl;
+			string findkey;
+			cin >> findkey;
+
+			auto it = mp.find(findkey);
+
+			if (it != mp.end())
+			{
+				map<string, string> m;
+				count = 0;
+				ifstream id(ad->TestFolder + "/" + it->second + "/" + ad->testname);
+				if (id.is_open())
+				{			
+					while (!id.eof())
+					{
+
+						getline(id, key);
+						getline(id, category);
+
+						if (key != "")
+							m[key] = category;
+						count++;
+					}
+					count--;
+					id.close();
+
+					string nt;
+					bool ch3 = false;
+					while (ch3 != true)
+					{
+						system("cls");
+						if (m.size())
+						{
+							cout << "List categories that have been added : " << endl;
+							cout << endl;
+							for (auto i = m.begin(); i != m.end(); ++i)
+							{
+								cout << i->first << ". " << i->second << endl;
+							}
+							cout << endl;
+						}
+
+						cout << "Enter the name of test :" << endl;
+						cout << endl;
+						cin >> nt;
+					
+						ifstream ifr(ad->TestFolder + "/" + it->second + "/" + nt + "/" + ad->emptyFile);
+						if (ifr.is_open())
+						{
+							cout << "____________________________________________________" << endl;
+							cout << endl;
+							cout << "This name of test is already in the list. Try again." << endl;
+							cout << "____________________________________________________" << endl;
+							cout << endl;
+							system("pause");
+						}
+						else
+						{
+							ch3 = true;
+						}
+					}
+					create_directory(ad->TestFolder + "/" + it->second + "/" + nt);
+					ofstream ofs(ad->TestFolder + "/" + it->second + "/" + ad->testname, ios::app);
+					ofs << ++count << endl;
+					ofs << nt << endl;
+					ofs.close();
+					ofstream emp(ad->TestFolder + "/" + it->second + "/" + nt + "/" + ad->emptyFile);
+					emp.close();
+				}
+				else
+				{
+					system("cls");
+					cout << "You have not test in " << it->second << " category." << endl;
+					int c = 0;
+					cout << "Enter the name of test" << endl;
+					string nt;
+					cin >> nt;
+
+					create_directory(ad->TestFolder + "/" + it->second + "/" + nt);
+					ofstream ofs(ad->TestFolder + "/" + it->second + "/" + ad->testname);
+					ofs << ++c << endl;
+					ofs << nt << endl;
+					ofs.close();
+					ofstream emp(ad->TestFolder + "/" + it->second + "/" + nt + "/" + ad->emptyFile);
+					emp.close();
+				}	
+			}
+		}
+	}
+
+	inline void admin::addtest()
+	{
+		unique_ptr<admin> ad(new admin);
+		map<string, string> mp;
+		string key, category;
+		int count = 0;
+		ifstream ifq(ad->TestFolder + "/" + "category.txt");
+		if (ifq.is_open())
+		{
+			while (!ifq.eof())
+			{
+				getline(ifq, key);
+				getline(ifq, category);
+
+				if (key != "")
+					mp[key] = category;
+				count++;
+			}
+			count--;
+			ifq.close();
+		}
+		else
+		{
+			cout << "You have not added category yet." << endl;
+			cout << "Do you want to add new category? (yes = 1 / no = 0)" << endl;
+			bool yy;
+			cin >> yy;
+			if (yy == 1)
+			{
+				addCategory();
+			}
+			else 
+			{
+				gotomenu g;
+				g.go();
+			}
+		}
+		if (mp.size())
+		{
+			cout << "List categories that have been added : " << endl;
+			cout << endl;
+			for (auto i = mp.begin(); i != mp.end(); ++i)
+			{
+				cout << i->first << ". " << i->second << endl;
+			}
+			cout << endl;
+
+			cout << "Enter the category number in which you want to add a new test." << endl;
+			string findkey;
+			cin >> findkey;
+
+			auto it = mp.find(findkey);
+
+			if (it != mp.end())
+			{
+				map<string, string> m;
+				ifstream id(ad->TestFolder + "/" + it->second + "/" + ad->testname);
+				if (!id.is_open())
+				{
+					cout << "You haven`t the test name folder. Do you want to add? ( yes = 1 / no = 0 )" << endl;
+					bool bb;
+					cin >> bb;
+					if (bb == 1)
+					{
+						addnameoftest();
+					}
+					else
+					{
+						gotomenu g;
+						g.go();
+					}
+				}
+				else
+				{
+					system("cls");
+					if (m.size())
+					{
+						cout << "List categories that have been added : " << endl;
+						cout << endl;
+						for (auto i = m.begin(); i != m.end(); ++i)
+						{
+							cout << i->first << ". " << i->second << endl;
+						}
+						cout << endl;
+					}
+
+					cout << "Enter the category number in which you want to add a new test." << endl;
+					string findkey_test;
+					cin >> findkey_test;
+					auto ite = m.find(findkey_test);
+					if (ite != m.end())
+					{
+						cout << "How much questions do you want to add?" << endl;
+						int quest;
+						cin >> quest;
+						int col = 0;
+						while (col != quest)
+						{
+							system("cls");
+							cout << "Enter question :" << endl;
+							count = 1;
+							int q_key = 0, a_key = 0;
+							string question, answer;
+
+							map<int, string> mquestion;
+							map<int, string> manswer;
+
+
+
+							col++;
+						}
+					}
+					else
+					{
+						cout << "Uncorrect number of test." << endl;
+						system("pause");
+					}
+				}
+			}
+			else
+			{
+				cout << "Uncorrect number of test." << endl;
+				system("pause");
+			}
+		}
+		else
+		{
+			cout << "You have not added category yet." << endl;
+			cout << "Do you want to add new category? (yes = 1 / no = 0)" << endl;
+			bool yy;
+			cin >> yy;
+			if (yy == 1)
+			{
+				addCategory();
+			}
+			else
+			{
+				gotomenu g;
+				g.go();
+			}
+		}
 	}
 
 	inline void admin::editguest()
@@ -539,5 +839,5 @@ using namespace std::experimental::filesystem;
 	//	return true;
 	}
 
-
+	
 
