@@ -28,6 +28,7 @@ void gotoxy(int, int);
 		string TestFolder = "TestFolder";
 		string emptyFile = "emptyFile.txt"; //Хитрый, пустой файл благодаря которому мы можем проверять, можно ли открыть папку.(Существует ли она)
 		string testname = "testname.txt";
+		string testquantity = "testquantity.txt";
 
 		/*string UsersFolder = "UsersFolder";
 		string StudentsFile = "StudentsFile.txt";*/
@@ -398,6 +399,7 @@ void gotoxy(int, int);
 
 	inline void admin::addnameoftest()
 	{
+		system("cls");
 		unique_ptr<admin> ad(new admin);
 		map<string, string> mp;
 		string key, category;
@@ -588,8 +590,20 @@ void gotoxy(int, int);
 
 			if (it != mp.end())
 			{
+				
 				map<string, string> m;
 				ifstream id(ad->TestFolder + "/" + it->second + "/" + ad->testname);
+				while (!id.eof())
+				{
+					getline(id, key);
+					getline(id, category);
+
+					if (key != "")
+						m[key] = category;
+					count++;
+				}
+				count--;
+
 				if (!id.is_open())
 				{
 					cout << "You haven`t the test name folder. Do you want to add? ( yes = 1 / no = 0 )" << endl;
@@ -618,37 +632,147 @@ void gotoxy(int, int);
 						}
 						cout << endl;
 					}
-
-					cout << "Enter the category number in which you want to add a new test." << endl;
-					string findkey_test;
-					cin >> findkey_test;
-					auto ite = m.find(findkey_test);
-					if (ite != m.end())
+					id.close();
+					cout << "You have this test." << endl;
+					cout << "Do you want to add new test name? ( yes = 1 / no = 0 )" << endl;
+					bool qq;
+					cin >> qq;
+					if (qq == 1)
 					{
-						cout << "How much questions do you want to add?" << endl;
-						int quest;
-						cin >> quest;
-						int col = 0;
-						while (col != quest)
-						{
-							system("cls");
-							cout << "Enter question :" << endl;
-							count = 1;
-							int q_key = 0, a_key = 0;
-							string question, answer;
-
-							map<int, string> mquestion;
-							map<int, string> manswer;
-
-
-
-							col++;
-						}
+						addnameoftest();
 					}
 					else
 					{
-						cout << "Uncorrect number of test." << endl;
-						system("pause");
+						system("cls");
+						if (m.size())
+						{
+							cout << "List categories that have been added : " << endl;
+							cout << endl;
+							for (auto i = m.begin(); i != m.end(); ++i)
+							{
+								cout << i->first << ". " << i->second << endl;
+							}
+							cout << endl;
+						}
+						cout << "Enter the category number in which you want to add a new test." << endl;
+						string findkey_test;
+						cin >> findkey_test;
+						auto ite = m.find(findkey_test);
+						if (ite != m.end())
+						{
+							cout << "How much questions do you want to add?" << endl;
+							int quest;
+							cin >> quest;
+							int col = 0;
+							
+							while (col != quest)
+							{
+								count = 1;
+								int q_key = 0, a_key = 0;
+								string question, answer;
+
+								map<int, string> mquestion;
+								map<int, string> manswer;
+								system("cls");
+								cout << "Enter question :" << endl;
+								
+
+								ifstream ifs(ad->TestFolder + "/" + it->second + "/" + ite->second + "/" + ad->testquantity);
+								if (!ifs.is_open())
+								{
+									cout << "You dont have questions in this test." << endl;
+									ofstream of(ad->TestFolder + "/" + it->second + "/" + ite->second + "/" + ad->testquantity);
+									of.close();
+								}
+								else
+								{
+									while (!ifs.eof())
+									{
+										char* buff = new char[5];
+										ifs.getline(buff, 5);
+										count = atoi(buff);
+										delete[] buff;
+										ifs.close();
+									}
+									cout << "You have " << count << " question in this test;" << endl;
+									count++;
+									int fline = -1;
+									string test_q;
+									for (size_t i = 1; i < count; i++)
+									{
+										ifstream ifr(ad->TestFolder + "/" + it->second + "/" + ite->second + "/" + to_string(i) + ".txt");
+										if (ifr.is_open())
+										{
+											for (size_t q = 0; q < 2; q++)
+											{
+												getline(ifr, test_q);
+												if (!fline)
+												{
+													cout << i << ". " << test_q << endl;
+													fline = -2;
+												}
+												fline++;
+											}
+											ifr.close();
+										}
+										else
+										{
+											cout << "Error, file haven`t been opened. Maybe you haven`t had a file." << endl;
+											system("pause");
+										}
+									}
+
+									cout << "Enter the " << count << " question." << endl;
+									cin.ignore();
+									cin >> question;
+									q_key = count;
+									mquestion.emplace(q_key, question);
+									int n;
+									cout << "Enter amount of responses : " << endl;
+									cin.ignore();
+									cin >> n;
+									cout << "Enter answers to the question : " << endl;
+
+									cin.ignore();
+
+									for (size_t i = 1; i < n + 1; i++)
+									{
+										cout << i << ". ";
+										getline(cin, answer);
+										manswer.emplace(++a_key, answer);
+									}
+
+									cout << "Enter the number of the correct answer to the question : " << endl;
+									cin >> n;
+
+									ofstream ofs;
+
+									ofs.open(ad->TestFolder + "/" + it->second + "/" + ite->second + "/" + ad->testquantity);
+									ofs << q_key;
+									ofs.close();
+									ofs.open(ad->TestFolder + "/" + it->second + "/" + ite->second + "/" + to_string(q_key) + ".txt");
+									ofs << n << endl;
+
+									for (auto it = mquestion.begin(); it != mquestion.end(); ++it)
+									{
+										ofs << it->second << endl;
+									}
+
+									for (auto it = manswer.begin(); it != manswer.end(); ++it)
+									{
+										ofs << it->first << ". " << it->second << endl;
+									}
+
+									ofs.close();
+								}
+								col++;
+							}
+						}
+						else
+						{
+							cout << "Uncorrect number of test." << endl;
+							system("pause");
+						}
 					}
 				}
 			}

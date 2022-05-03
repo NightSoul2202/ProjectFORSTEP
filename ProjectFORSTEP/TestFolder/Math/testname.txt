@@ -1,8 +1,2 @@
 1
-mult
-2
-minus
-3
-qwwe
-4
-1
+Mult
