@@ -57,40 +57,6 @@ void gotoxy(int, int);
 		~guest() {};
 		/*void registration();*/
 		void dotask();
-		string gettxtname() { return txtname; }
-		void load()
-		{
-			/*ifstream in("guest.txt");
-			if (in.is_open())
-			{
-				while (!in.eof())
-				{
-					char* buff = new char[80];
-					Protocol* prot = new Protocol;
-					int s;
-					in.getline(buff, 80);
-					prot->setNumTS(buff);
-					in.getline(buff, 80);
-					prot->setdate(buff);
-					in.getline(buff, 80);
-					s = atoi(buff);
-					prot->setsum(s);
-
-					List<Protocol*>* list = base.get(prot->getNumTS());
-					if (!list)
-					{
-						List<Protocol*> newList;
-						newList.push_front(prot);
-						base.push_r(prot->getNumTS(), newList);
-
-					}
-					else
-					{
-						list->push_front(prot);
-					}
-				}
-			}*/
-		}
 		virtual void changepassword() override;
 		virtual void enter() override;
 		virtual void resultsearch() override;
@@ -316,6 +282,7 @@ void gotoxy(int, int);
 		void addCategory();
 		void addnameoftest();
 		void addtest();
+		void deletetest();
 		void editguest(); //создавать в разные файлы новых кентиков, а потом удалять, номер который не нужен
 		void deleteguest(); //просто удалить по номеру кента
 		virtual void changepassword() override;
@@ -394,7 +361,6 @@ void gotoxy(int, int);
 				system("pause");
 			}
 		}
-		
 	}
 
 	inline void admin::addnameoftest()
@@ -800,6 +766,145 @@ void gotoxy(int, int);
 		}
 	}
 
+	inline void admin::deletetest()
+	{
+		unique_ptr<admin> ad(new admin);
+		map<string, string> mp;
+		string key, category;
+		int count = 0;
+		ifstream ifq(ad->TestFolder + "/" + "category.txt");
+		if (ifq.is_open())
+		{
+			while (!ifq.eof())
+			{
+				getline(ifq, key);
+				getline(ifq, category);
+
+				if (key != "")
+					mp[key] = category;
+				count++;
+			}
+			count--;
+			ifq.close();
+		}
+		else
+		{
+			cout << "You have not added category yet." << endl;
+			system("pause");
+			gotomenu g;
+			g.go();
+		}
+		if (mp.size())
+		{
+			cout << "List categories that have been added : " << endl;
+			cout << endl;
+			for (auto i = mp.begin(); i != mp.end(); ++i)
+			{
+				cout << i->first << ". " << i->second << endl;
+			}
+			cout << endl;
+
+			cout << "Enter the category number in which you want to add a new test." << endl;
+			string findkey;
+			cin >> findkey;
+
+			auto it = mp.find(findkey);
+
+			if (it != mp.end())
+			{
+				map<string, string> m;
+				ifstream id(ad->TestFolder + "/" + it->second + "/" + ad->testname);
+				while (!id.eof())
+				{
+					getline(id, key);
+					getline(id, category);
+
+					if (key != "")
+						m[key] = category;
+					count++;
+				}
+				count--;
+
+				if (!id.is_open())
+				{
+					cout << "You haven`t the test." << endl;
+					system("pause");
+					gotomenu g;
+					g.go();
+				}
+				else
+				{
+					system("cls");
+					if (m.size())
+					{
+						cout << "List categories that have been added : " << endl;
+						cout << endl;
+						for (auto i = m.begin(); i != m.end(); ++i)
+						{
+							cout << i->first << ". " << i->second << endl;
+						}
+						cout << endl;
+					}
+					else
+					{
+						cout << "You haven`t test to delete them." << endl;
+						system("pause");
+						gotomenu g;
+						g.go();
+					}
+					cout << "Enter the number of test which do you want to delete." << endl;
+					string findkey_test;
+					cin >> findkey_test;
+					auto ite = m.find(findkey_test);
+					if (ite != m.end())
+					{
+						path p = ad->TestFolder + "/" + it->second + "/" + ite->second;
+						string p1 = ad->TestFolder + "/" + it->second + "/" + ad->testname;
+						remove_all(p);
+						m.erase(key);
+						m.erase(ite->first);
+						ofstream ofs;
+						ofs.open(p1);
+
+						int c = 1;
+						for (auto it = m.begin(); it != m.end(); ++it)
+						{
+							ofs << c++ << "\n" << it->second << "\n";
+						}
+						ofs.close();
+					}
+					else
+					{
+						cout << "Uncorrect number of test." << endl;
+						system("pause");
+					}
+				}
+			}
+			else
+			{
+				cout << "Uncorrect number of test." << endl;
+				system("pause");
+			}
+		}
+		else
+		{
+			cout << "You have not added category yet." << endl;
+			cout << "Do you want to add new category? (yes = 1 / no = 0)" << endl;
+			bool yy;
+			cin >> yy;
+			if (yy == 1)
+			{
+				addCategory();
+			}
+			else
+			{
+				gotomenu g;
+				g.go();
+			}
+		}
+
+	}
+
 	inline void admin::editguest()
 	{
 	}
@@ -945,7 +1050,7 @@ void gotoxy(int, int);
 			}
 			else
 			{
-				exit(0);/*mainmenu();*/
+				exit(0); /*mainmenu();*/
 			}
 		}
 	}
