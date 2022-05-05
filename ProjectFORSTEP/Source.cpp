@@ -34,37 +34,6 @@ public:
 
 void MENU::mainmenu()
 {
-	
-	/*ifstream in("protocol.txt");
-	if (in.is_open())
-	{
-		while (!in.eof())
-		{
-			char* buff = new char[80];
-			Protocol* prot = new Protocol;
-			int s;
-			in.getline(buff, 80);
-			prot->setNumTS(buff);
-			in.getline(buff, 80);
-			prot->setdate(buff);
-			in.getline(buff, 80);
-			s = atoi(buff);
-			prot->setsum(s);
-
-			List<Protocol*>* list = base.get(prot->getNumTS());
-			if (!list)
-			{
-				List<Protocol*> newList;
-				newList.push_front(prot);
-				base.push_r(prot->getNumTS(), newList);
-
-			}
-			else
-			{
-				list->push_front(prot);
-			}
-		}
-	}*/
 	while (true)
 	{
 		system("cls");
@@ -100,7 +69,7 @@ inline void MENU::menuforadmin()
 		cout << "\t\t      ## #### ## #####   ## ## ## ##    ##" << endl;
 		cout << "\t\t      ##  ##  ## ##      ##  #### ##    ##" << endl;
 		cout << "\t\t      ##      ## ####### ##   ###  ###### " << endl;
-		vector<string> v = { "Add Catagory", "Add new test", "Add new test name", "Delete test", "Print all result", "Search result", "Back" };
+		vector<string> v = { "Add Catagory", "Add new test", "Add new test name", "Delete test", "Delete User", "Search result", "Back" };
 		Menu m;
 		int menu = m.select_vertical(v) + 1;
 		admin a;
@@ -110,7 +79,7 @@ inline void MENU::menuforadmin()
 		case 2: system("cls"); a.addtest(); break;
 		case 3: system("cls"); a.addnameoftest(); break;
 		case 4: system("cls"); a.deletetest(); break;
-		case 5: system("cls"); /*changepassword();*/ break;
+		case 5: system("cls"); a.deleteguest(); break;
 		case 6: system("cls"); /*changepassword();*/ break;
 		case 7: mainmenu(); break;
 		}

@@ -39,6 +39,7 @@ void gotoxy(int, int);
 		virtual void enter() = 0;
 		virtual void resultsearch() = 0;
 		virtual void changepassword() = 0;
+		string getla() { return this->folder; }
 		
 		
 		string getpass() { return this->pass; }
@@ -170,12 +171,12 @@ void gotoxy(int, int);
 		else
 		{
 			system("cls");
-			bool s;
+			int s;
 			cout << "Account registration. Take the steps you need. Remember all data." << endl;
 			cout << "Replacement of data is possible when you confirm the necessary data." << endl;
 			cout << "Enter \"1\" to continue registration, or \"0\" to exit" << endl;
 			cin >> s;
-			if (s == true)
+			if (s == 1)
 			{
 				bool ch1 = false;
 				while (ch1 != true)
@@ -254,7 +255,7 @@ void gotoxy(int, int);
 			}
 			else
 			{
-				exit(0);/*mainmenu();*/
+				exit(0);
 			}
 		}
 	}
@@ -389,7 +390,7 @@ void gotoxy(int, int);
 		{
 			cout << "You have not added category yet." << endl;
 			cout << "Do you want to add new category? (yes = 1 / no = 0)" << endl;
-			bool yy;
+			int yy;
 			cin >> yy;
 			if (yy == 1)
 			{
@@ -526,7 +527,7 @@ void gotoxy(int, int);
 		{
 			cout << "You have not added category yet." << endl;
 			cout << "Do you want to add new category? (yes = 1 / no = 0)" << endl;
-			bool yy;
+			int yy;
 			cin >> yy;
 			if (yy == 1)
 			{
@@ -573,7 +574,7 @@ void gotoxy(int, int);
 				if (!id.is_open())
 				{
 					cout << "You haven`t the test name folder. Do you want to add? ( yes = 1 / no = 0 )" << endl;
-					bool bb;
+					int bb;
 					cin >> bb;
 					if (bb == 1)
 					{
@@ -601,7 +602,7 @@ void gotoxy(int, int);
 					id.close();
 					cout << "You have this test." << endl;
 					cout << "Do you want to add new test name? ( yes = 1 / no = 0 )" << endl;
-					bool qq;
+					int qq;
 					cin >> qq;
 					if (qq == 1)
 					{
@@ -752,7 +753,7 @@ void gotoxy(int, int);
 		{
 			cout << "You have not added category yet." << endl;
 			cout << "Do you want to add new category? (yes = 1 / no = 0)" << endl;
-			bool yy;
+			int yy;
 			cin >> yy;
 			if (yy == 1)
 			{
@@ -861,7 +862,6 @@ void gotoxy(int, int);
 						path p = ad->TestFolder + "/" + it->second + "/" + ite->second;
 						string p1 = ad->TestFolder + "/" + it->second + "/" + ad->testname;
 						remove_all(p);
-						m.erase(key);
 						m.erase(ite->first);
 						ofstream ofs;
 						ofs.open(p1);
@@ -869,7 +869,7 @@ void gotoxy(int, int);
 						int c = 1;
 						for (auto it = m.begin(); it != m.end(); ++it)
 						{
-							ofs << c++ << "\n" << it->second << "\n";
+							ofs << c++ << endl << it->second << endl;
 						}
 						ofs.close();
 					}
@@ -889,18 +889,9 @@ void gotoxy(int, int);
 		else
 		{
 			cout << "You have not added category yet." << endl;
-			cout << "Do you want to add new category? (yes = 1 / no = 0)" << endl;
-			bool yy;
-			cin >> yy;
-			if (yy == 1)
-			{
-				addCategory();
-			}
-			else
-			{
-				gotomenu g;
-				g.go();
-			}
+			system("pause");
+			gotomenu g;
+			g.go();
 		}
 
 	}
@@ -911,7 +902,111 @@ void gotoxy(int, int);
 
 	inline void admin::deleteguest()
 	{
-	}
+		unique_ptr<admin> ad(new admin);
+		map<string, string> mp;
+		map<string, string> m;
+		string key, category, key_l, category_l;
+		ifstream ifq(ad->UserStat + "/" + "DatabaseStudents.txt");
+		if (ifq.is_open())
+		{
+			while (!ifq.eof())
+			{
+				getline(ifq, key);
+				getline(ifq, category);
+
+				if (key != "")
+					mp[key] = category;
+			}
+			ifq.close();
+			ifstream i(ad->UserStat + "/" + "UserInfo.txt");
+			if (i.is_open())
+			{
+				while (!i.eof())
+				{
+					getline(i, key_l);
+					getline(i, category_l);
+
+					if (key_l != "")
+						m[key_l] = category_l;
+				}
+				i.close();
+				if (mp.size())
+				{
+					cout << "List user that have been added : " << endl;
+					cout << endl;
+					for (auto i = mp.begin(); i != mp.end(); ++i)
+					{
+						cout << "Phone number : " << i->first << " . " << i->second << endl;
+					}
+					cout << endl;
+				}
+				else
+				{
+					cout << "You haven`t users in system." << endl;
+					system("pause");
+					gotomenu g;
+					g.go();
+				}
+				cout << "Enter phone number to delete user." << endl;
+				cin >> key;
+				auto it = mp.find(key);
+				if (it != mp.end())
+				{
+					cout << "Enter LOGIN to confirm" << endl;
+					string login;
+					cin >> login;
+					string logcheck;
+					logcheck = this->getla() + "/" + md5(login) + ".txt";
+
+					remove(logcheck);
+					mp.erase(key);
+					m.erase(key);
+					string p = ad->UserStat + "/" + login;
+					remove_all(p);
+					string p1 = ad->UserStat + "/" + "DatabaseStudents.txt";
+					string p2 = ad->UserStat + "/" + "UserInfo.txt";
+					ofstream of;
+					of.open(p1);
+					for (auto it = mp.begin(); it != mp.end(); ++it)
+					{
+						of << it->first << endl << it->second << endl;
+					}
+					of.close();
+
+					of.open(p2);
+					for (auto it = mp.begin(); it != mp.end(); ++it)
+					{
+						of << it->first << endl << it->second << endl;
+					}
+					of.close();
+				}
+				else
+				{
+					cout << "In system wasnt found this user." << endl;
+					system("pause");
+					gotomenu g;
+					g.go();
+				}
+			}
+			else
+			{
+				cout << "You haven`t usera in system." << endl;
+				system("pause");
+				gotomenu g;
+				g.go();
+			}
+		}
+		else
+		{
+			cout << "You haven`t user in system." << endl;
+			system("pause");
+			gotomenu g;
+			g.go();
+		}
+		
+
+		
+ 	}
 
 
 	inline void admin::changepassword()
@@ -1022,7 +1117,7 @@ void gotoxy(int, int);
 		}
 		else
 		{
-			bool s;
+			int s;
 			cout << "You aren`t have admin account, do you want to add admin account?" << endl;
 			cout << "Warnings! If you forgot your pass or login, call to your it admin to change pass." << endl;
 			cout << "You can do only one account, in future you will can change pass and login." << endl;
