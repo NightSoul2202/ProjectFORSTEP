@@ -283,11 +283,9 @@ void gotoxy(int, int);
 		void addCategory();
 		void addnameoftest();
 		void addtest();
-		void deletetest();
-		void editguest(); //создавать в разные файлы новых кентиков, а потом удалять, номер который не нужен
-		void deleteguest(); //просто удалить по номеру кента
+		void deletetest(); 
+		void deleteguest();
 		virtual void changepassword() override;
-		/*bool checkpass();*/
 		void result();
 		virtual void enter() override;
 		virtual void resultsearch() override;
@@ -896,10 +894,6 @@ void gotoxy(int, int);
 
 	}
 
-	inline void admin::editguest()
-	{
-	}
-
 	inline void admin::deleteguest()
 	{
 		unique_ptr<admin> ad(new admin);
@@ -1011,39 +1005,23 @@ void gotoxy(int, int);
 
 	inline void admin::changepassword()
 	{
-		//bool b;
-		//bool chpass = false;
-		//while (b != 1 && chpass != true)
-		//{
-		//	
-		//	cout << "Do you really want to edit your pass?" << endl;
-		//	cout << "Enter 0 to agree or 1 to disagree." << endl;
-		//	cin >> b;
-		//	if (b == 0)
-		//	{
-		//		remove("adminpass.txt");
-		//		// plus add new pass with shifr
-		//		bool chpass = true;
-		//	}
-		//	else if (b == 1)
-		//	{
-		//		cout << "Recent to mainmenu." << endl;
-		//	}
-		//}
+		string login, password;
+		path p = "admin.txt";
+		remove(p);
+		cout << "Enter new login : ";
+		cin >> login;
+		string logincheck, passcheck;
+		logincheck = md5(login);
+		cout << "Enter new password : ";
+		cin >> password;
+		passcheck = md5(password);
+		ofstream of("admin.txt");
+		of << logincheck << endl;
+		of << passcheck;
+		of.close();
+		cout << "Login and password was changed." << endl;
+		system("pause");
 	}
-
-	//inline bool admin::checkpass()
-	//{
-	//	/*printAll();
-	//	cout << endl;
-	//	string log;
-	//	cout << "Enter the number of a car : ";
-	//	cin >> log;
-	//	List<Protocol*>* list = base.get(num);
-	//	list->print();
-	//	system("pause");*/
-	//	return true;
-	//}
 
 	inline void admin::result()
 	{
