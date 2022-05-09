@@ -107,7 +107,7 @@ inline void MENU::menuforguest()
 	{
 	case 1: system("cls"); /*g.dotask();*/ break;
 	case 2: system("cls"); /*g.resultsearch();*/ break;
-	case 3: system("cls"); /*g.changepassword();*/ break;
+	case 3: system("cls"); g.changepassword(); break;
 	case 4: mainmenu(); break;
 	}
 	}

@@ -39,7 +39,6 @@ void gotoxy(int, int);
 		virtual void enter() = 0;
 		virtual void resultsearch() = 0;
 		virtual void changepassword() = 0;
-		string getla() { return this->folder; }
 		
 		
 		string getpass() { return this->pass; }
@@ -74,25 +73,55 @@ void gotoxy(int, int);
 
 	inline void guest::changepassword()
 	{
-		//bool b;
-		//	//bool chpass = false;
-		//	//while (b != 1 && chpass != true)
-		//	//{
-		//	//	
-		//	//	cout << "Do you really want to edit your pass?" << endl;
-		//	//	cout << "Enter 0 to agree or 1 to disagree." << endl;
-		//	//	cin >> b;
-		//	//	if (b == 0)
-		//	//	{
-		//	//		remove("adminpass.txt");
-		//	//		// plus add new pass with shifr
-		//	//		bool chpass = true;
-		//	//	}
-		//	//	else if (b == 1)
-		//	//	{
-		//	//		cout << "Recent to mainmenu." << endl;
-		//	//	}
-		//	//}
+		unique_ptr<guest> gu(new guest);
+		map <string, string> mp;
+		string loginq, passq, fioq;
+		cout << "Enter your login to change password" << endl;
+		string login;
+		cin >> login;
+		string logincheck = md5(login);
+		string path = gu->folder + "/" + logincheck + ".txt";
+		ifstream ifs(path);
+		if (!ifs.is_open())
+		{
+			cout << "Uncorrect login." << endl;
+			system("pause");
+		}
+		else
+		{
+			cout << "Enter new password." << endl;
+			string pass;
+			cin >> pass;
+			string passcheck = md5(pass);
+
+			while (!ifs.eof())
+			{
+				getline(ifs, loginq);
+				getline(ifs, passq);
+				getline(ifs, fioq);
+			}
+			bool ch1 = false;
+			string passc;
+			while (ch1 != true)
+			{
+				cout << "Enter new password again" << endl;
+				cin >> passc;
+				if (pass != passc)
+				{
+					cout << "Uncorrect password." << endl;
+					system("pause");
+				}
+				else
+				{
+					ch1 = true;
+				}
+			}
+			ofstream of(path);
+			of << loginq << endl;
+			of << passcheck << endl;
+			of << fioq;
+			of.close();
+		}
 	}
 
 	inline void guest::enter()
@@ -396,8 +425,7 @@ void gotoxy(int, int);
 			}
 			else
 			{
-				gotomenu g;
-				g.go();
+				exit(0);
 			}
 		}
 		if (mp.size())
@@ -533,8 +561,7 @@ void gotoxy(int, int);
 			}
 			else 
 			{
-				gotomenu g;
-				g.go();
+				exit(0);
 			}
 		}
 		if (mp.size())
@@ -580,8 +607,7 @@ void gotoxy(int, int);
 					}
 					else
 					{
-						gotomenu g;
-						g.go();
+						exit(0);
 					}
 				}
 				else
@@ -790,8 +816,7 @@ void gotoxy(int, int);
 		{
 			cout << "You have not added category yet." << endl;
 			system("pause");
-			gotomenu g;
-			g.go();
+			exit(0);
 		}
 		if (mp.size())
 		{
@@ -828,8 +853,7 @@ void gotoxy(int, int);
 				{
 					cout << "You haven`t the test." << endl;
 					system("pause");
-					gotomenu g;
-					g.go();
+					exit(0);
 				}
 				else
 				{
@@ -938,8 +962,7 @@ void gotoxy(int, int);
 				{
 					cout << "You haven`t users in system." << endl;
 					system("pause");
-					gotomenu g;
-					g.go();
+					exit(0);
 				}
 				cout << "Enter phone number to delete user." << endl;
 				cin >> key;
@@ -950,7 +973,7 @@ void gotoxy(int, int);
 					string login;
 					cin >> login;
 					string logcheck;
-					logcheck = this->getla() + "/" + md5(login) + ".txt";
+					logcheck = ad->folder + "/" + md5(login) + ".txt";
 
 					remove(logcheck);
 					mp.erase(key);
