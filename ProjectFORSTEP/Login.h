@@ -23,6 +23,7 @@ void gotoxy(int, int);
 	protected:
 		string log;
 		string pass;
+		string ltt = "login_test_try.txt";
 		string folder = "LoginAccounts";
 		string UserStat = "UserStat";
 		string TestFolder = "TestFolder";
@@ -56,6 +57,7 @@ void gotoxy(int, int);
 		guest() {};
 		~guest() {};
 		/*void registration();*/
+
 		void dotask();
 		virtual void changepassword() override;
 		virtual void enter() override;
@@ -68,6 +70,182 @@ void gotoxy(int, int);
 
 	inline void guest::dotask()
 	{
+		unique_ptr<guest> gu(new guest);
+		map<string, string> mp;
+		string key, category;
+		int count = 0;
+		ifstream ifq(gu->TestFolder + "/" + "category.txt");
+		if (ifq.is_open())
+		{
+			while (!ifq.eof())
+			{
+				getline(ifq, key);
+				getline(ifq, category);
+
+				if (key != "")
+					mp[key] = category;
+				count++;
+			}
+			count--;
+			ifq.close();
+		}
+		else
+		{
+			cout << "Sorry, but we dont have added tests yet." << endl;
+			system("pause");
+		}
+		if (mp.size())
+		{
+			cout << "List categories that have been added : " << endl;
+			cout << endl;
+			for (auto i = mp.begin(); i != mp.end(); ++i)
+			{
+				cout << i->first << ". " << i->second << endl;
+			}
+			cout << endl;
+
+			cout << "Enter the category number test." << endl;
+			string findkey;
+			cin >> findkey;
+
+			auto it = mp.find(findkey);
+
+			if (it != mp.end())
+			{
+				map<string, string> m;
+				ifstream id(gu->TestFolder + "/" + it->second + "/" + gu->testname);
+				while (!id.eof())
+				{
+					getline(id, key);
+					getline(id, category);
+
+					if (key != "")
+						m[key] = category;
+					count++;
+				}
+				count--;
+
+				if (!id.is_open())
+				{
+					cout << "Sorry, but we dont have added tests yet." << endl;
+					system("pause");
+				}
+				else
+				{
+					system("cls");
+					if (m.size())
+					{
+						cout << "List categories that have been added : " << endl;
+						cout << endl;
+						for (auto i = m.begin(); i != m.end(); ++i)
+						{
+							cout << i->first << ". " << i->second << endl;
+						}
+						cout << endl;
+					}
+					else
+					{
+						cout << "Sorry, but we dont have added tests yet." << endl;
+						system("pause");
+						exit(0);
+					}
+					cout << "Enter the number of test which do you want to do." << endl;
+					string findkey_test;
+					cin >> findkey_test;
+					auto ite = m.find(findkey_test);
+
+					if (ite != m.end())
+					{
+						string question_load, answer_load;
+						int answer_take;
+						int correct_answ = 0; //correct answer;
+						int done_answ = 0; //done answer;
+						ifstream iw(gu->TestFolder + "/" + it->second + "/" + ite->second + "/" + gu->testquantity);
+						int n = 0;
+						while (!iw.eof())
+						{
+							char* buff = new char[5];
+							iw.getline(buff, 5);
+							n = atoi(buff);
+							delete[] buff;
+						}
+						
+						if (iw.is_open())
+						{
+							for (size_t i = 1; i < n + 1; i++)
+							{
+								system("cls");
+								string path = gu->TestFolder + "/" + it->second + "/" + ite->second + "/" + to_string(i) + ".txt";
+								ifstream ir;
+								ir.open(path);
+								getline(ir, answer_load);
+								while (!ir.eof())
+								{
+									question_load = ""; // clear question string;
+									getline(ir, question_load);
+									cout << question_load << endl;
+								}
+								ir.close();
+								cout << "Question number : " << i << " ;" << endl;
+								cout << "Enter number of answer : ";
+								cin >> answer_take;
+								cout << endl;
+								if (to_string(answer_take) == answer_load) // int to string
+								{
+									correct_answ++;
+								}
+								done_answ++;
+							}	
+							string login_try;
+							ifstream irs;
+							irs.open(ltt);
+							getline(irs, login_try);
+							irs.close();
+							cout << endl;
+							cout << "Congratulation!!!" << endl;
+							cout << "Test end. Your result is " << correct_answ << " correct answers of " << done_answ << " questions." << endl;
+							remove(ltt);
+							ofstream ofq(gu->UserStat + "/" + login_try + "/" + "successful_test.txt", ios::app);
+							ofq << "Test: " << ite->second << ";" << endl;
+							ofq << "Correct question: " << correct_answ << ";" << endl;
+							ofq << "Question on test: " << done_answ << ";" << endl;
+							ofq << "____________________" << endl;
+							ofq << endl;
+							ofq.close();
+
+							ofstream of(gu->UserStat + "/" + "user_successful_tests.txt", ios::app);
+							of << "Login: " << login_try << endl;
+							of << "Test: " << ite->second << ";" << endl;
+							of << "Correct question: " << correct_answ << ";" << endl;
+							of << "Question on test: " << done_answ << ";" << endl;
+							of << "____________________" << endl;
+							of << endl;
+							of.close();
+						}
+						else
+						{
+							cout << "Sorry, but we dont have added tests yet." << endl;
+							system("pause");
+						}
+					}
+					else
+					{
+						cout << "Sorry, but we dont have added tests yet." << endl;
+						system("pause");
+					}
+				}
+			}
+			else
+			{
+				cout << "Sorry, but we dont have added tests yet." << endl;
+				system("pause");
+			}
+		}
+		else
+		{
+			cout << "Sorry, but we dont have added tests yet." << endl;
+			system("pause");
+		}
 
 	}
 
@@ -171,6 +349,9 @@ void gotoxy(int, int);
 				if (passhash == passcheck && loginhash == logcheck)
 				{
 					check = true;
+					ofstream off(ltt);
+					off << gu->log;
+					off.close();
 				}
 				else
 				{
