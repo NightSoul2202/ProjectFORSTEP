@@ -196,7 +196,7 @@ void gotoxy(int, int);
 									correct_answ++;
 								}
 								done_answ++;
-							}	
+							}
 							string login_try;
 							ifstream irs;
 							irs.open(ltt);
@@ -206,7 +206,7 @@ void gotoxy(int, int);
 							int test_mark = getmark(correct_answ, done_answ);
 							cout << "Congratulation!!!" << endl;
 							cout << "Test end. Your result is " << correct_answ << " correct answers of " << done_answ << " questions." << endl;
-							remove(ltt);
+
 							ofstream ofq(gu->UserStat + "/" + login_try + "/" + "successful_test.txt", ios::app);
 							ofq << "Test: " << ite->second << ";" << endl;
 							ofq << "Mark: " << test_mark << ";" << endl;
@@ -223,6 +223,7 @@ void gotoxy(int, int);
 							of << "____________________" << endl;
 							of << endl;
 							of.close();
+							system("pause");
 						}
 						else
 						{
@@ -257,31 +258,65 @@ void gotoxy(int, int);
 
 		int uncorrect_answ;
 		uncorrect_answ = done_answ - correct_answ;
-		int mark100 = (done_answ - uncorrect_answ) / done_answ * 100;
+		double mark100 = (done_answ - uncorrect_answ) / (double)done_answ * 100;
 		if (correct_answ == done_answ)
 			return mark = 12;
 		if (mark100 >= 94)
-			return mark = 11;
+		{
+			mark = 11;
+			return mark;
+		}
 		else if (mark100 >= 86)
-			return mark = 10;
+		{
+			mark = 10;
+			return mark;
+		}
 		else if (mark100 >= 78)
+		{
+			mark = 9;
 			return mark = 9;
+		}
 		else if (mark100 >= 70)
-			return mark = 8;
+		{
+			mark = 8;
+			return mark;
+		}
 		else if (mark100 >= 62)
-			return mark = 7;
+		{
+			mark = 7;
+			return mark;
+		}
 		else if (mark100 >= 54)
-			return mark = 6;
+		{
+			mark = 6;
+			return mark;
+		}
 		else if (mark100 >= 46)
-			return mark = 5;
-		else if(mark100 >= 34)
-			return mark = 4;
-		else if(mark100 >= 22)
-			return mark = 3;
-		else if(mark100 >= 10)
-			return mark = 2;
+		{
+			mark = 5;
+			return mark;
+		}
+		else if (mark100 >= 34)
+		{
+			mark = 4;
+			return mark;
+		}
+		else if (mark100 >= 22)
+		{
+			mark = 3;
+			return mark;
+		}
+		else if (mark100 >= 10)
+		{
+			mark = 2;
+			return mark;
+
+		}
 		else
+		{
 			return mark = 1;
+		}
+			
 	}
 
 	inline void guest::changepassword()
@@ -507,14 +542,24 @@ void gotoxy(int, int);
 
 	inline void guest::resultsearch()
 	{
-		/*printAll();
-		//	cout << endl;
-		//	string log;
-		//	cout << "Enter the number of a car : ";
-		//	cin >> log;
-		//	List<Protocol*>* list = base.get(num);
-		//	list->print();
-		//	system("pause");*/
+		unique_ptr<guest> gu(new guest);
+		string login_test_try;
+		string get_result;
+		ifstream ifr;
+		ifr.open(ltt);
+		getline(ifr, login_test_try);
+		ifr.close();
+		cout << "Your results is : " << endl;
+		ifstream ifs;
+		ifs.open(gu->UserStat + "/" + login_test_try + "/" + "successful_test.txt");
+		while(!ifs.eof())
+		{
+			get_result = "";
+			getline(ifs, get_result);
+			cout << get_result << endl;
+		}
+		ifs.close();
+		system("pause");
 	}
 
 
@@ -1264,6 +1309,19 @@ void gotoxy(int, int);
 
 	inline void admin::result()
 	{
+		unique_ptr<admin> ad(new admin);
+		string get_result;
+		cout << "Your results is : " << endl;
+		ifstream ifs;
+		ifs.open(ad->UserStat + "/" + "user_successful_tests.txt");
+		while (!ifs.eof())
+		{
+			get_result = "";
+			getline(ifs, get_result);
+			cout << get_result << endl;
+		}
+		ifs.close();
+		system("pause");
 	}
 
 	inline void admin::enter()
