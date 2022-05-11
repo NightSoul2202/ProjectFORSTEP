@@ -59,6 +59,7 @@ void gotoxy(int, int);
 		/*void registration();*/
 
 		void dotask();
+		int getmark(int correct_answ, int done_answ);
 		virtual void changepassword() override;
 		virtual void enter() override;
 		virtual void resultsearch() override;
@@ -202,12 +203,13 @@ void gotoxy(int, int);
 							getline(irs, login_try);
 							irs.close();
 							cout << endl;
+							int test_mark = getmark(correct_answ, done_answ);
 							cout << "Congratulation!!!" << endl;
 							cout << "Test end. Your result is " << correct_answ << " correct answers of " << done_answ << " questions." << endl;
 							remove(ltt);
 							ofstream ofq(gu->UserStat + "/" + login_try + "/" + "successful_test.txt", ios::app);
 							ofq << "Test: " << ite->second << ";" << endl;
-							ofq << "Correct question: " << correct_answ << ";" << endl;
+							ofq << "Mark: " << test_mark << ";" << endl;
 							ofq << "Question on test: " << done_answ << ";" << endl;
 							ofq << "____________________" << endl;
 							ofq << endl;
@@ -216,7 +218,7 @@ void gotoxy(int, int);
 							ofstream of(gu->UserStat + "/" + "user_successful_tests.txt", ios::app);
 							of << "Login: " << login_try << endl;
 							of << "Test: " << ite->second << ";" << endl;
-							of << "Correct question: " << correct_answ << ";" << endl;
+							of << "Mark: " << test_mark << ";" << endl;
 							of << "Question on test: " << done_answ << ";" << endl;
 							of << "____________________" << endl;
 							of << endl;
@@ -247,6 +249,39 @@ void gotoxy(int, int);
 			system("pause");
 		}
 
+	}
+
+	inline int guest::getmark(int correct_answ, int done_answ)
+	{
+		int mark;
+
+		int uncorrect_answ;
+		uncorrect_answ = done_answ - correct_answ;
+		int mark100 = (done_answ - uncorrect_answ) / done_answ * 100;
+		if (correct_answ == done_answ)
+			return mark = 12;
+		if (mark100 >= 94)
+			return mark = 11;
+		else if (mark100 >= 86)
+			return mark = 10;
+		else if (mark100 >= 78)
+			return mark = 9;
+		else if (mark100 >= 70)
+			return mark = 8;
+		else if (mark100 >= 62)
+			return mark = 7;
+		else if (mark100 >= 54)
+			return mark = 6;
+		else if (mark100 >= 46)
+			return mark = 5;
+		else if(mark100 >= 34)
+			return mark = 4;
+		else if(mark100 >= 22)
+			return mark = 3;
+		else if(mark100 >= 10)
+			return mark = 2;
+		else
+			return mark = 1;
 	}
 
 	inline void guest::changepassword()
