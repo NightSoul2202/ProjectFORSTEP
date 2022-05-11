@@ -550,13 +550,20 @@ void gotoxy(int, int);
 		getline(ifr, login_test_try);
 		ifr.close();
 		cout << "Your results is : " << endl;
-		ifstream ifs;
-		ifs.open(gu->UserStat + "/" + login_test_try + "/" + "successful_test.txt");
-		while(!ifs.eof())
+		ifstream ifs(gu->UserStat + "/" + login_test_try + "/" + "successful_test.txt");
+		if (ifs.is_open())
 		{
-			get_result = "";
-			getline(ifs, get_result);
-			cout << get_result << endl;
+			while (!ifs.eof())
+			{
+				get_result = "";
+				getline(ifs, get_result);
+				cout << get_result << endl;
+			}
+		}
+		else
+		{
+			cout << "There is no data in the system." << endl;
+			system("pause");
 		}
 		ifs.close();
 		system("pause");
@@ -1133,8 +1140,7 @@ void gotoxy(int, int);
 					{
 						cout << "You haven`t test to delete them." << endl;
 						system("pause");
-						gotomenu g;
-						g.go();
+						exit(0);
 					}
 					cout << "Enter the number of test which do you want to delete." << endl;
 					string findkey_test;
@@ -1281,9 +1287,6 @@ void gotoxy(int, int);
 			gotomenu g;
 			g.go();
 		}
-		
-
-		
  	}
 
 
@@ -1312,13 +1315,20 @@ void gotoxy(int, int);
 		unique_ptr<admin> ad(new admin);
 		string get_result;
 		cout << "Your results is : " << endl;
-		ifstream ifs;
-		ifs.open(ad->UserStat + "/" + "user_successful_tests.txt");
-		while (!ifs.eof())
+		ifstream ifs(ad->UserStat + "/" + "user_successful_tests.txt");
+		if (ifs.is_open())
 		{
-			get_result = "";
-			getline(ifs, get_result);
-			cout << get_result << endl;
+			while (!ifs.eof())
+			{
+				get_result = "";
+				getline(ifs, get_result);
+				cout << get_result << endl;
+			}
+		}
+		else
+		{
+			cout << "There is no data in the system." << endl;
+			system("pause");
 		}
 		ifs.close();
 		system("pause");
@@ -1398,7 +1408,7 @@ void gotoxy(int, int);
 			cout << "You can do only one account, in future you will can change pass and login." << endl;
 			cout << "Write 1 to do account, or 0 to leave." << endl;
 			cin >> s;
-			if (s == true)
+			if (s == 1)
 			{
 				string l, p;
 				cout << "Hello, please, enter your login and password" << endl;
@@ -1427,15 +1437,77 @@ void gotoxy(int, int);
 
 	inline void admin::resultsearch()
 	{
-		/*printAll();
-		cout << endl;
-		string log;
-		cout << "Enter the number of a car : ";
-	//	cin >> log;
-	//	List<Protocol*>* list = base.get(num);
-	//	list->print();
-	//	system("pause");*/
-	//	return true;
+		unique_ptr<admin> ad(new admin);
+		map<string, string> mp;
+		string key, category;
+		ifstream ifs(ad->UserStat + "/" + "DatabaseStudents.txt");
+		if (ifs.is_open())
+		{
+			while(!ifs.eof())
+			{
+				getline(ifs, key);
+				getline(ifs, category);
+
+				if (key != "")
+					mp[key] = category;
+			}
+			ifs.close();
+
+			if (mp.size())
+			{
+				cout << "List user that have been added : " << endl;
+				cout << endl;
+				for (auto i = mp.begin(); i != mp.end(); ++i)
+				{
+					cout << "Phone number : " << i->first << " . " << i->second << endl;
+				}
+				cout << endl;
+			}
+
+			cout << "Enter phone number to check result." << endl;
+			string keyedit;
+			cin >> keyedit;
+			auto it = mp.find(keyedit);
+			if (it != mp.end())
+			{
+				system("cls");
+				cout << "You chose this person." << endl;
+				cout << "Phone number : " << it->first << " . " << it->second << endl;
+				cout << "Enter login to confirm : ";
+				string login;
+				cin >> login;
+				ifstream ifq(ad->UserStat + "/" + login + "/" + "successful_test.txt");
+				if (ifq.is_open())
+				{
+					system("cls");
+					string get_result;
+					while (!ifq.eof())
+					{
+						get_result = "";
+						getline(ifq, get_result);
+						cout << get_result << endl;
+					}
+					ifq.close();
+					system("pause");
+				}
+				else
+				{
+					cout << "There is no data in system." << endl;
+					system("pause");
+				}
+			}
+			else
+			{
+				cout << "Error. Uncorrect phone number." << endl;
+				system("pause");
+			}
+		}
+		else
+		{
+			cout << "There is no data in system." << endl;
+			system("pause");
+		}
+
 	}
 
 	

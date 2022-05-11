@@ -61,7 +61,7 @@ inline void MENU::menuforadmin()
 		cout << "\t\t      ## #### ## #####   ## ## ## ##    ##" << endl;
 		cout << "\t\t      ##  ##  ## ##      ##  #### ##    ##" << endl;
 		cout << "\t\t      ##      ## ####### ##   ###  ###### " << endl;
-		vector<string> v = { "Add Catagory", "Add new test", "Add new test name", "Result all students", "Delete test", "Delete User", "Change password and login", "Back" };
+		vector<string> v = { "Add Catagory", "Add new test", "Add new test name", "Result all students", "Search result", "Delete test", "Delete User", "Change password and login", "Back" };
 		Menu m;
 		int menu = m.select_vertical(v) + 1;
 		admin a;
@@ -71,10 +71,11 @@ inline void MENU::menuforadmin()
 		case 2: system("cls"); a.addtest(); break;
 		case 3: system("cls"); a.addnameoftest(); break;
 		case 4: system("cls"); a.result(); break;
-		case 5: system("cls"); a.deletetest(); break;
-		case 6: system("cls"); a.deleteguest(); break;
-		case 7: system("cls"); a.changepassword(); break;
-		case 8: mainmenu(); break;
+		case 5: system("cls"); a.resultsearch(); break;
+		case 6: system("cls"); a.deletetest(); break;
+		case 7: system("cls"); a.deleteguest(); break;
+		case 8: system("cls"); a.changepassword(); break;
+		case 9: mainmenu(); break;
 		}
 	}
 }
