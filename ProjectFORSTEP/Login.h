@@ -13,8 +13,11 @@ void gotoxy(int, int);
 			system("cls");
 			int gotx = 10;
 			gotoxy(30, ++gotx);
-			cout << "Ok. Go to main menu.";
-			Sleep(2000);
+			cout << "Ok. Go to main menu." << endl;
+			cout << endl;
+			cout << endl;
+			cout << "\t\t";
+			system("pause");
 		}
 	};
 
@@ -89,153 +92,155 @@ void gotoxy(int, int);
 			}
 			count--;
 			ifq.close();
-		}
-		else
-		{
-			cout << "Sorry, but we dont have added tests yet." << endl;
-			system("pause");
-		}
-		if (mp.size())
-		{
-			cout << "List categories that have been added : " << endl;
-			cout << endl;
-			for (auto i = mp.begin(); i != mp.end(); ++i)
+
+			if (mp.size())
 			{
-				cout << i->first << ". " << i->second << endl;
-			}
-			cout << endl;
-
-			cout << "Enter the category number test." << endl;
-			string findkey;
-			cin >> findkey;
-
-			auto it = mp.find(findkey);
-
-			if (it != mp.end())
-			{
-				map<string, string> m;
-				ifstream id(gu->TestFolder + "/" + it->second + "/" + gu->testname);
-				while (!id.eof())
+				cout << "List categories that have been added : " << endl;
+				cout << endl;
+				for (auto i = mp.begin(); i != mp.end(); ++i)
 				{
-					getline(id, key);
-					getline(id, category);
-
-					if (key != "")
-						m[key] = category;
-					count++;
+					cout << i->first << ". " << i->second << endl;
 				}
-				count--;
+				cout << endl;
 
-				if (!id.is_open())
+				cout << "Enter the category number test." << endl;
+				string findkey;
+				cin >> findkey;
+
+				auto it = mp.find(findkey);
+
+				if (it != mp.end())
 				{
-					cout << "Sorry, but we dont have added tests yet." << endl;
-					system("pause");
-				}
-				else
-				{
-					system("cls");
-					if (m.size())
+					map<string, string> m;
+					ifstream id(gu->TestFolder + "/" + it->second + "/" + gu->testname);
+					while (!id.eof())
 					{
-						cout << "List categories that have been added : " << endl;
-						cout << endl;
-						for (auto i = m.begin(); i != m.end(); ++i)
-						{
-							cout << i->first << ". " << i->second << endl;
-						}
-						cout << endl;
+						getline(id, key);
+						getline(id, category);
+
+						if (key != "")
+							m[key] = category;
+						count++;
 					}
-					else
+					count--;
+
+					if (!id.is_open())
 					{
 						cout << "Sorry, but we dont have added tests yet." << endl;
 						system("pause");
-						exit(0);
 					}
-					cout << "Enter the number of test which do you want to do." << endl;
-					string findkey_test;
-					cin >> findkey_test;
-					auto ite = m.find(findkey_test);
-
-					if (ite != m.end())
+					else
 					{
-						string question_load, answer_load;
-						int answer_take;
-						int correct_answ = 0; //correct answer;
-						int done_answ = 0; //done answer;
-						ifstream iw(gu->TestFolder + "/" + it->second + "/" + ite->second + "/" + gu->testquantity);
-						int n = 0;
-						while (!iw.eof())
+						system("cls");
+						if (m.size())
 						{
-							char* buff = new char[5];
-							iw.getline(buff, 5);
-							n = atoi(buff);
-							delete[] buff;
-						}
-						
-						if (iw.is_open())
-						{
-							for (size_t i = 1; i < n + 1; i++)
-							{
-								system("cls");
-								string path = gu->TestFolder + "/" + it->second + "/" + ite->second + "/" + to_string(i) + ".txt";
-								ifstream ir;
-								ir.open(path);
-								getline(ir, answer_load);
-								while (!ir.eof())
-								{
-									question_load = ""; // clear question string;
-									getline(ir, question_load);
-									cout << question_load << endl;
-								}
-								ir.close();
-								cout << "Question number : " << i << " ;" << endl;
-								cout << "Enter number of answer : ";
-								cin >> answer_take;
-								cout << endl;
-								if (to_string(answer_take) == answer_load) // int to string
-								{
-									correct_answ++;
-								}
-								done_answ++;
-							}
-							string login_try;
-							ifstream irs;
-							irs.open(ltt);
-							getline(irs, login_try);
-							irs.close();
+							cout << "List categories that have been added : " << endl;
 							cout << endl;
-							int test_mark = getmark(correct_answ, done_answ);
-							cout << "Congratulation!!!" << endl;
-							cout << "Test end. Your result is " << correct_answ << " correct answers of " << done_answ << " questions." << endl;
+							for (auto i = m.begin(); i != m.end(); ++i)
+							{
+								cout << i->first << ". " << i->second << endl;
+							}
+							cout << endl;
 
-							ofstream ofq(gu->UserStat + "/" + login_try + "/" + "successful_test.txt", ios::app);
-							ofq << "Test: " << ite->second << ";" << endl;
-							ofq << "Mark: " << test_mark << ";" << endl;
-							ofq << "Question on test: " << done_answ << ";" << endl;
-							ofq << "____________________" << endl;
-							ofq << endl;
-							ofq.close();
+							cout << "Enter the number of test which do you want to do." << endl;
+							string findkey_test;
+							cin >> findkey_test;
+							auto ite = m.find(findkey_test);
 
-							ofstream of(gu->UserStat + "/" + "user_successful_tests.txt", ios::app);
-							of << "Login: " << login_try << endl;
-							of << "Test: " << ite->second << ";" << endl;
-							of << "Mark: " << test_mark << ";" << endl;
-							of << "Question on test: " << done_answ << ";" << endl;
-							of << "____________________" << endl;
-							of << endl;
-							of.close();
-							system("pause");
+							if (ite != m.end())
+							{
+								string question_load, answer_load;
+								int answer_take;
+								int correct_answ = 0; //correct answer;
+								int done_answ = 0; //done answer;
+								ifstream iw(gu->TestFolder + "/" + it->second + "/" + ite->second + "/" + gu->testquantity);
+								int n = 0;
+								while (!iw.eof())
+								{
+									char* buff = new char[5];
+									iw.getline(buff, 5);
+									n = atoi(buff);
+									delete[] buff;
+								}
+
+								if (iw.is_open())
+								{
+									for (size_t i = 1; i < n + 1; i++)
+									{
+										system("cls");
+										string path = gu->TestFolder + "/" + it->second + "/" + ite->second + "/" + to_string(i) + ".txt";
+										ifstream ir;
+										ir.open(path);
+										getline(ir, answer_load);
+										while (!ir.eof())
+										{
+											question_load = ""; // clear question string;
+											getline(ir, question_load);
+											cout << question_load << endl;
+										}
+										ir.close();
+										cout << "Question number : " << i << " ;" << endl;
+										cout << "Enter number of answer : ";
+										cin >> answer_take;
+										cout << endl;
+										if (to_string(answer_take) == answer_load) // int to string
+										{
+											correct_answ++;
+										}
+										done_answ++;
+									}
+									string login_try;
+									ifstream irs;
+									irs.open(ltt);
+									getline(irs, login_try);
+									irs.close();
+									cout << endl;
+									int test_mark = getmark(correct_answ, done_answ);
+									cout << "Congratulation!!!" << endl;
+									cout << "Test end. Your result is " << correct_answ << " correct answers of " << done_answ << " questions." << endl;
+
+									ofstream ofq(gu->UserStat + "/" + login_try + "/" + "successful_test.txt", ios::app);
+									ofq << "Test: " << ite->second << ";" << endl;
+									ofq << "Mark: " << test_mark << ";" << endl;
+									ofq << "Question on test: " << done_answ << ";" << endl;
+									ofq << "____________________" << endl;
+									ofq << endl;
+									ofq.close();
+
+									ofstream of(gu->UserStat + "/" + "user_successful_tests.txt", ios::app);
+									of << "Login: " << login_try << endl;
+									of << "Test: " << ite->second << ";" << endl;
+									of << "Mark: " << test_mark << ";" << endl;
+									of << "Question on test: " << done_answ << ";" << endl;
+									of << "____________________" << endl;
+									of << endl;
+									of.close();
+									system("pause");
+								}
+								else
+								{
+									cout << "Sorry, but we dont have added tests yet." << endl;
+									system("pause");
+								}
+							}
+							else
+							{
+								cout << "Sorry, but we dont have added tests yet." << endl;
+								system("pause");
+							}
 						}
 						else
 						{
 							cout << "Sorry, but we dont have added tests yet." << endl;
 							system("pause");
 						}
+
 					}
-					else
-					{
-						cout << "Sorry, but we dont have added tests yet." << endl;
-						system("pause");
-					}
+				}
+				else
+				{
+					cout << "Sorry, but we dont have added tests yet." << endl;
+					system("pause");
 				}
 			}
 			else
@@ -249,6 +254,7 @@ void gotoxy(int, int);
 			cout << "Sorry, but we dont have added tests yet." << endl;
 			system("pause");
 		}
+		
 
 	}
 
@@ -559,6 +565,7 @@ void gotoxy(int, int);
 				getline(ifs, get_result);
 				cout << get_result << endl;
 			}
+			system("pause");
 		}
 		else
 		{
@@ -566,7 +573,6 @@ void gotoxy(int, int);
 			system("pause");
 		}
 		ifs.close();
-		system("pause");
 	}
 
 
@@ -667,21 +673,7 @@ void gotoxy(int, int);
 		string key, category;
 		int count = 0;
 		ifstream ifq(ad->TestFolder + "/" + "category.txt");
-		if (ifq.is_open())
-		{
-			while (!ifq.eof())
-			{
-				getline(ifq, key);
-				getline(ifq, category);
-
-				if (key != "")
-					mp[key] = category;
-				count++;
-			}
-			count--;
-			ifq.close();
-		}
-		else
+		if (!ifq.is_open())
 		{
 			cout << "You have not added category yet." << endl;
 			cout << "Do you want to add new category? (yes = 1 / no = 0)" << endl;
@@ -693,117 +685,11 @@ void gotoxy(int, int);
 			}
 			else
 			{
-				exit(0);
+				gotomenu g;
+				g.go();
 			}
 		}
-		if (mp.size())
-		{
-			cout << "List categories that have been added : " << endl;
-			cout << endl;
-			for (auto i = mp.begin(); i != mp.end(); ++i)
-			{
-				cout << i->first << ". " << i->second << endl;
-			}
-			cout << endl;
-
-			cout << "Enter the category number in which you want to add a new test name." << endl;
-			string findkey;
-			cin >> findkey;
-
-			auto it = mp.find(findkey);
-
-			if (it != mp.end())
-			{
-				map<string, string> m;
-				count = 0;
-				ifstream id(ad->TestFolder + "/" + it->second + "/" + ad->testname);
-				if (id.is_open())
-				{			
-					while (!id.eof())
-					{
-
-						getline(id, key);
-						getline(id, category);
-
-						if (key != "")
-							m[key] = category;
-						count++;
-					}
-					count--;
-					id.close();
-
-					string nt;
-					bool ch3 = false;
-					while (ch3 != true)
-					{
-						system("cls");
-						if (m.size())
-						{
-							cout << "List categories that have been added : " << endl;
-							cout << endl;
-							for (auto i = m.begin(); i != m.end(); ++i)
-							{
-								cout << i->first << ". " << i->second << endl;
-							}
-							cout << endl;
-						}
-
-						cout << "Enter the name of test :" << endl;
-						cout << endl;
-						cin >> nt;
-					
-						ifstream ifr(ad->TestFolder + "/" + it->second + "/" + nt + "/" + ad->emptyFile);
-						if (ifr.is_open())
-						{
-							cout << "____________________________________________________" << endl;
-							cout << endl;
-							cout << "This name of test is already in the list. Try again." << endl;
-							cout << "____________________________________________________" << endl;
-							cout << endl;
-							system("pause");
-						}
-						else
-						{
-							ch3 = true;
-						}
-					}
-					create_directory(ad->TestFolder + "/" + it->second + "/" + nt);
-					ofstream ofs(ad->TestFolder + "/" + it->second + "/" + ad->testname, ios::app);
-					ofs << ++count << endl;
-					ofs << nt << endl;
-					ofs.close();
-					ofstream emp(ad->TestFolder + "/" + it->second + "/" + nt + "/" + ad->emptyFile);
-					emp.close();
-				}
-				else
-				{
-					system("cls");
-					cout << "You have not test in " << it->second << " category." << endl;
-					int c = 0;
-					cout << "Enter the name of test" << endl;
-					string nt;
-					cin >> nt;
-
-					create_directory(ad->TestFolder + "/" + it->second + "/" + nt);
-					ofstream ofs(ad->TestFolder + "/" + it->second + "/" + ad->testname);
-					ofs << ++c << endl;
-					ofs << nt << endl;
-					ofs.close();
-					ofstream emp(ad->TestFolder + "/" + it->second + "/" + nt + "/" + ad->emptyFile);
-					emp.close();
-				}	
-			}
-		}
-	}
-
-	inline void admin::addtest()
-	{
-		unique_ptr<admin> ad(new admin);
-		map<string, string> mp;
-		string key, category;
-		int count = 0;
-		ifstream ifq(ad->TestFolder + "/" + "category.txt");
-		if (ifq.is_open())
+		else
 		{
 			while (!ifq.eof())
 			{
@@ -816,92 +702,198 @@ void gotoxy(int, int);
 			}
 			count--;
 			ifq.close();
+
+			if (mp.size())
+			{
+				cout << "List categories that have been added : " << endl;
+				cout << endl;
+				for (auto i = mp.begin(); i != mp.end(); ++i)
+				{
+					cout << i->first << ". " << i->second << endl;
+				}
+				cout << endl;
+
+				cout << "Enter the category number in which you want to add a new test name." << endl;
+				string findkey;
+				cin >> findkey;
+
+				auto it = mp.find(findkey);
+
+				if (it != mp.end())
+				{
+					map<string, string> m;
+					count = 0;
+					ifstream id(ad->TestFolder + "/" + it->second + "/" + ad->testname);
+					if (id.is_open())
+					{
+						while (!id.eof())
+						{
+
+							getline(id, key);
+							getline(id, category);
+
+							if (key != "")
+								m[key] = category;
+							count++;
+						}
+						count--;
+						id.close();
+
+						string nt;
+						bool ch3 = false;
+						while (ch3 != true)
+						{
+							system("cls");
+							if (m.size())
+							{
+								cout << "List categories that have been added : " << endl;
+								cout << endl;
+								for (auto i = m.begin(); i != m.end(); ++i)
+								{
+									cout << i->first << ". " << i->second << endl;
+								}
+								cout << endl;
+							}
+
+							cout << "Enter the name of test :" << endl;
+							cout << endl;
+							cin >> nt;
+
+							ifstream ifr(ad->TestFolder + "/" + it->second + "/" + nt + "/" + ad->emptyFile);
+							if (ifr.is_open())
+							{
+								cout << "____________________________________________________" << endl;
+								cout << endl;
+								cout << "This name of test is already in the list. Try again." << endl;
+								cout << "____________________________________________________" << endl;
+								cout << endl;
+								system("pause");
+							}
+							else
+							{
+								ch3 = true;
+							}
+						}
+						create_directory(ad->TestFolder + "/" + it->second + "/" + nt);
+						ofstream ofs(ad->TestFolder + "/" + it->second + "/" + ad->testname, ios::app);
+						ofs << ++count << endl;
+						ofs << nt << endl;
+						ofs.close();
+						ofstream emp(ad->TestFolder + "/" + it->second + "/" + nt + "/" + ad->emptyFile);
+						emp.close();
+					}
+					else
+					{
+						system("cls");
+						cout << "You have not test in " << it->second << " category." << endl;
+						int c = 0;
+						cout << "Enter the name of test" << endl;
+						string nt;
+						cin >> nt;
+
+						create_directory(ad->TestFolder + "/" + it->second + "/" + nt);
+						ofstream ofs(ad->TestFolder + "/" + it->second + "/" + ad->testname);
+						ofs << ++c << endl;
+						ofs << nt << endl;
+						ofs.close();
+						ofstream emp(ad->TestFolder + "/" + it->second + "/" + nt + "/" + ad->emptyFile);
+						emp.close();
+					}
+				}
+			}
 		}
-		else
+	}
+
+	inline void admin::addtest()
+	{
+		unique_ptr<admin> ad(new admin);
+		map<string, string> mp;
+		string key, category;
+		int count = 0;
+		ifstream ifq(ad->TestFolder + "/" + "category.txt");
+		if (!ifq.is_open())
 		{
+			
 			cout << "You have not added category yet." << endl;
 			cout << "Do you want to add new category? (yes = 1 / no = 0)" << endl;
 			int yy;
 			cin >> yy;
 			if (yy == 1)
 			{
+				system("cls");
 				addCategory();
 			}
 			else 
 			{
-				exit(0);
+				gotomenu g;
+				g.go();
 			}
 		}
-		if (mp.size())
+		else
 		{
-			cout << "List categories that have been added : " << endl;
-			cout << endl;
-			for (auto i = mp.begin(); i != mp.end(); ++i)
+			while (!ifq.eof())
 			{
-				cout << i->first << ". " << i->second << endl;
+				getline(ifq, key);
+				getline(ifq, category);
+
+				if (key != "")
+					mp[key] = category;
+				count++;
 			}
-			cout << endl;
+			count--;
+			ifq.close();
 
-			cout << "Enter the category number in which you want to add a new test." << endl;
-			string findkey;
-			cin >> findkey;
-
-			auto it = mp.find(findkey);
-
-			if (it != mp.end())
+			if (mp.size())
 			{
-				
-				map<string, string> m;
-				ifstream id(ad->TestFolder + "/" + it->second + "/" + ad->testname);
-				while (!id.eof())
+				cout << "List categories that have been added : " << endl;
+				cout << endl;
+				for (auto i = mp.begin(); i != mp.end(); ++i)
 				{
-					getline(id, key);
-					getline(id, category);
-
-					if (key != "")
-						m[key] = category;
-					count++;
+					cout << i->first << ". " << i->second << endl;
 				}
-				count--;
+				cout << endl;
 
-				if (!id.is_open())
+				cout << "Enter the category number in which you want to add a new test." << endl;
+				string findkey;
+				cin >> findkey;
+
+				auto it = mp.find(findkey);
+
+				if (it != mp.end())
 				{
-					cout << "You haven`t the test name folder. Do you want to add? ( yes = 1 / no = 0 )" << endl;
-					int bb;
-					cin >> bb;
-					if (bb == 1)
+
+					map<string, string> m;
+					ifstream id(ad->TestFolder + "/" + it->second + "/" + ad->testname);
+					
+
+					if (!id.is_open())
 					{
-						addnameoftest();
-					}
-					else
-					{
-						exit(0);
-					}
-				}
-				else
-				{
-					system("cls");
-					if (m.size())
-					{
-						cout << "List categories that have been added : " << endl;
-						cout << endl;
-						for (auto i = m.begin(); i != m.end(); ++i)
+						cout << "You haven`t the test name folder. Do you want to add? ( yes = 1 / no = 0 )" << endl;
+						int bb;
+						cin >> bb;
+						if (bb == 1)
 						{
-							cout << i->first << ". " << i->second << endl;
+							addnameoftest();
 						}
-						cout << endl;
-					}
-					id.close();
-					cout << "You have this test." << endl;
-					cout << "Do you want to add new test name? ( yes = 1 / no = 0 )" << endl;
-					int qq;
-					cin >> qq;
-					if (qq == 1)
-					{
-						addnameoftest();
+						else
+						{
+							gotomenu g;
+							g.go();
+						}
 					}
 					else
 					{
+						while (!id.eof())
+						{
+							getline(id, key);
+							getline(id, category);
+
+							if (key != "")
+								m[key] = category;
+							count++;
+						}
+						count--;
+
 						system("cls");
 						if (m.size())
 						{
@@ -923,8 +915,9 @@ void gotoxy(int, int);
 							int quest;
 							cin >> quest;
 							int col = 0;
-							
-							while (col != quest)
+							int questq = quest + 1;
+
+							while (col != questq)
 							{
 								count = 1;
 								int q_key = 0, a_key = 0;
@@ -934,7 +927,7 @@ void gotoxy(int, int);
 								map<int, string> manswer;
 								system("cls");
 								cout << "Enter question :" << endl;
-								
+
 
 								ifstream ifs(ad->TestFolder + "/" + it->second + "/" + ite->second + "/" + ad->testquantity);
 								if (!ifs.is_open())
@@ -1026,37 +1019,46 @@ void gotoxy(int, int);
 								}
 								col++;
 							}
+							cout << "Test added successfully!" << endl;
+							system("pause");
 						}
 						else
 						{
 							cout << "Uncorrect number of test." << endl;
 							system("pause");
+							gotomenu g;
+							g.go();
 						}
+						
 					}
+				}
+				else
+				{
+					cout << "Uncorrect number of test." << endl;
+					system("pause");
+					gotomenu g;
+					g.go();
 				}
 			}
 			else
 			{
-				cout << "Uncorrect number of test." << endl;
-				system("pause");
+				cout << "You have not added category yet." << endl;
+				cout << "Do you want to add new category? (yes = 1 / no = 0)" << endl;
+				int yy;
+				cin >> yy;
+				if (yy == 1)
+				{
+					system("cls");
+					addCategory();
+				}
+				else
+				{
+					gotomenu g;
+					g.go();
+				}
 			}
 		}
-		else
-		{
-			cout << "You have not added category yet." << endl;
-			cout << "Do you want to add new category? (yes = 1 / no = 0)" << endl;
-			int yy;
-			cin >> yy;
-			if (yy == 1)
-			{
-				addCategory();
-			}
-			else
-			{
-				gotomenu g;
-				g.go();
-			}
-		}
+		
 	}
 
 	inline void admin::deletetest()
@@ -1066,7 +1068,14 @@ void gotoxy(int, int);
 		string key, category;
 		int count = 0;
 		ifstream ifq(ad->TestFolder + "/" + "category.txt");
-		if (ifq.is_open())
+		if (!ifq.is_open())
+		{
+			cout << "You have not added category yet." << endl;
+			system("pause");
+			gotomenu g;
+			g.go();
+		}
+		else
 		{
 			while (!ifq.eof())
 			{
@@ -1079,109 +1088,116 @@ void gotoxy(int, int);
 			}
 			count--;
 			ifq.close();
-		}
-		else
-		{
-			cout << "You have not added category yet." << endl;
-			system("pause");
-			exit(0);
-		}
-		if (mp.size())
-		{
-			cout << "List categories that have been added : " << endl;
-			cout << endl;
-			for (auto i = mp.begin(); i != mp.end(); ++i)
+	
+			if (mp.size())
 			{
-				cout << i->first << ". " << i->second << endl;
-			}
-			cout << endl;
-
-			cout << "Enter the category number in which you want to add a new test." << endl;
-			string findkey;
-			cin >> findkey;
-
-			auto it = mp.find(findkey);
-
-			if (it != mp.end())
-			{
-				map<string, string> m;
-				ifstream id(ad->TestFolder + "/" + it->second + "/" + ad->testname);
-				while (!id.eof())
+				cout << "List categories that have been added : " << endl;
+				cout << endl;
+				for (auto i = mp.begin(); i != mp.end(); ++i)
 				{
-					getline(id, key);
-					getline(id, category);
-
-					if (key != "")
-						m[key] = category;
-					count++;
+					cout << i->first << ". " << i->second << endl;
 				}
-				count--;
+				cout << endl;
 
-				if (!id.is_open())
+				cout << "Enter the category number in which you want to add a new test." << endl;
+				string findkey;
+				cin >> findkey;
+
+				auto it = mp.find(findkey);
+
+				if (it != mp.end())
 				{
-					cout << "You haven`t the test." << endl;
-					system("pause");
-					exit(0);
+					map<string, string> m;
+					ifstream id(ad->TestFolder + "/" + it->second + "/" + ad->testname);
+					
+
+					if (!id.is_open())
+					{
+						cout << "You haven`t the test." << endl;
+						system("pause");
+						system("cls");
+						gotomenu g;
+						g.go();
+					}
+					else
+					{
+						while (!id.eof())
+						{
+							getline(id, key);
+							getline(id, category);
+
+							if (key != "")
+								m[key] = category;
+							count++;
+						}
+						count--;
+
+						system("cls");
+						if (m.size())
+						{
+							cout << "List categories that have been added : " << endl;
+							cout << endl;
+							for (auto i = m.begin(); i != m.end(); ++i)
+							{
+								cout << i->first << ". " << i->second << endl;
+							}
+							cout << endl;
+
+							cout << "Enter the number of test which do you want to delete." << endl;
+							string findkey_test;
+							cin >> findkey_test;
+							auto ite = m.find(findkey_test);
+							if (ite != m.end())
+							{
+								path p = ad->TestFolder + "/" + it->second + "/" + ite->second;
+								string p1 = ad->TestFolder + "/" + it->second + "/" + ad->testname;
+								remove_all(p);
+								m.erase(ite->first);
+								ofstream ofs;
+								ofs.open(p1);
+
+								int c = 1;
+								for (auto it = m.begin(); it != m.end(); ++it)
+								{
+									ofs << c++ << endl << it->second << endl;
+								}
+								ofs.close();
+							}
+							else
+							{
+								cout << "Uncorrect number of test." << endl;
+								system("pause");
+								gotomenu g;
+								g.go();
+							}
+						}
+						else
+						{
+							cout << "You haven`t test to delete them." << endl;
+							system("pause");
+							gotomenu g;
+							g.go();
+						}
+						
+					}
 				}
 				else
 				{
-					system("cls");
-					if (m.size())
-					{
-						cout << "List categories that have been added : " << endl;
-						cout << endl;
-						for (auto i = m.begin(); i != m.end(); ++i)
-						{
-							cout << i->first << ". " << i->second << endl;
-						}
-						cout << endl;
-					}
-					else
-					{
-						cout << "You haven`t test to delete them." << endl;
-						system("pause");
-						exit(0);
-					}
-					cout << "Enter the number of test which do you want to delete." << endl;
-					string findkey_test;
-					cin >> findkey_test;
-					auto ite = m.find(findkey_test);
-					if (ite != m.end())
-					{
-						path p = ad->TestFolder + "/" + it->second + "/" + ite->second;
-						string p1 = ad->TestFolder + "/" + it->second + "/" + ad->testname;
-						remove_all(p);
-						m.erase(ite->first);
-						ofstream ofs;
-						ofs.open(p1);
-
-						int c = 1;
-						for (auto it = m.begin(); it != m.end(); ++it)
-						{
-							ofs << c++ << endl << it->second << endl;
-						}
-						ofs.close();
-					}
-					else
-					{
-						cout << "Uncorrect number of test." << endl;
-						system("pause");
-					}
+					cout << "Uncorrect number of test." << endl;
+					system("pause");
+					gotomenu g;
+					g.go();
 				}
 			}
 			else
 			{
-				cout << "Uncorrect number of test." << endl;
+				cout << "You have not added category yet." << endl;
 				system("pause");
+				gotomenu g;
+				g.go();
 			}
 		}
-		else
-		{
-			cout << "You have not added category yet." << endl;
-			system("pause");
-			gotomenu g;
-			g.go();
-		}
+		
 
 	}
 
@@ -1224,49 +1240,51 @@ void gotoxy(int, int);
 						cout << "Phone number : " << i->first << " . " << i->second << endl;
 					}
 					cout << endl;
+
+					cout << "Enter phone number to delete user." << endl;
+					cin >> key;
+					auto it = mp.find(key);
+					if (it != mp.end())
+					{
+						cout << "Enter LOGIN to confirm" << endl;
+						string login;
+						cin >> login;
+						string logcheck;
+						logcheck = ad->folder + "/" + md5(login) + ".txt";
+
+						remove(logcheck);
+						mp.erase(key);
+						m.erase(key);
+						string p = ad->UserStat + "/" + login;
+						remove_all(p);
+						string p1 = ad->UserStat + "/" + "DatabaseStudents.txt";
+						string p2 = ad->UserStat + "/" + "UserInfo.txt";
+						ofstream of;
+						of.open(p1);
+						for (auto it = mp.begin(); it != mp.end(); ++it)
+						{
+							of << it->first << endl << it->second << endl;
+						}
+						of.close();
+
+						of.open(p2);
+						for (auto it = mp.begin(); it != mp.end(); ++it)
+						{
+							of << it->first << endl << it->second << endl;
+						}
+						of.close();
+					}
+					else
+					{
+						cout << "In system wasnt found this user." << endl;
+						system("pause");
+						gotomenu g;
+						g.go();
+					}
 				}
 				else
 				{
 					cout << "You haven`t users in system." << endl;
-					system("pause");
-					exit(0);
-				}
-				cout << "Enter phone number to delete user." << endl;
-				cin >> key;
-				auto it = mp.find(key);
-				if (it != mp.end())
-				{
-					cout << "Enter LOGIN to confirm" << endl;
-					string login;
-					cin >> login;
-					string logcheck;
-					logcheck = ad->folder + "/" + md5(login) + ".txt";
-
-					remove(logcheck);
-					mp.erase(key);
-					m.erase(key);
-					string p = ad->UserStat + "/" + login;
-					remove_all(p);
-					string p1 = ad->UserStat + "/" + "DatabaseStudents.txt";
-					string p2 = ad->UserStat + "/" + "UserInfo.txt";
-					ofstream of;
-					of.open(p1);
-					for (auto it = mp.begin(); it != mp.end(); ++it)
-					{
-						of << it->first << endl << it->second << endl;
-					}
-					of.close();
-
-					of.open(p2);
-					for (auto it = mp.begin(); it != mp.end(); ++it)
-					{
-						of << it->first << endl << it->second << endl;
-					}
-					of.close();
-				}
-				else
-				{
-					cout << "In system wasnt found this user." << endl;
 					system("pause");
 					gotomenu g;
 					g.go();
@@ -1324,6 +1342,7 @@ void gotoxy(int, int);
 				getline(ifs, get_result);
 				cout << get_result << endl;
 			}
+			system("pause");
 		}
 		else
 		{
@@ -1331,7 +1350,7 @@ void gotoxy(int, int);
 			system("pause");
 		}
 		ifs.close();
-		system("pause");
+		
 	}
 
 	inline void admin::enter()
@@ -1494,18 +1513,24 @@ void gotoxy(int, int);
 				{
 					cout << "There is no data in system." << endl;
 					system("pause");
+					gotomenu g;
+					g.go();
 				}
 			}
 			else
 			{
 				cout << "Error. Uncorrect phone number." << endl;
 				system("pause");
+				gotomenu g;
+				g.go();
 			}
 		}
 		else
 		{
 			cout << "There is no data in system." << endl;
 			system("pause");
+			gotomenu g;
+			g.go();
 		}
 
 	}
