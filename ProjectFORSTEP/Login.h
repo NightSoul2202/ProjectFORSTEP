@@ -49,9 +49,6 @@ void gotoxy(int, int);
 		string getlogin() { return this->log; }
 		void setpass(string setpass) { pass = setpass; }
 		void setlogin(string setlogin) { log = setlogin; }
-
-	
-		// здесь нужны гетеры и сетеры, такие как фио телефон и тд
 	};
 
 	class guest : public login
@@ -1412,11 +1409,9 @@ void gotoxy(int, int);
 			}
 			if (ras > 4)
 			{
-				//если попыток больше 5 выдать ошибку и отправить в меню
 				cout << "Sorry, but you had to much wrong attempts, try again later." << endl;
 				system("pause");
 				exit(0);
-				/*mainmenu();*/
 			}
 		}
 		else
@@ -1449,7 +1444,7 @@ void gotoxy(int, int);
 			}
 			else
 			{
-				exit(0); /*mainmenu();*/
+				exit(0);
 			}
 		}
 	}
