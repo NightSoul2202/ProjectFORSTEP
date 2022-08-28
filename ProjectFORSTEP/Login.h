@@ -392,19 +392,13 @@ void gotoxy(int, int);
 			system("cls");
 			bool check = false;
 			int ras = 0;
-			int count = 0;
+			string fio;
 			string passcheck, logcheck;
 			while (!in.eof())
 			{
-				while (count != 2)
-				{
-					if (count == 1)
-						getline(in, passcheck);
-					else if (count == 0)
-						getline(in, logcheck);
-					count++;
-				}
-				break;
+				getline(in, logcheck);
+				getline(in, passcheck);
+				getline(in, fio);
 			}
 			in.close();
 			while (ras != 5 && check != true)
@@ -1358,19 +1352,11 @@ void gotoxy(int, int);
 			bool check = false;
 			unique_ptr<admin> ad(new admin);
 			int ras = 0;
-			int count = 0;
 			string passcheck, logcheck;
 			while (!in.eof())
 			{
-				while (count != 2)
-				{
-					if (count == 1)
-						getline(in, passcheck);
-					else if (count == 0)
-						getline(in, logcheck);
-					count++;
-				}
-				break;
+				getline(in, passcheck);
+				getline(in, logcheck);
 			}
 			in.close();
 			while (ras != 5 && check!= true)
