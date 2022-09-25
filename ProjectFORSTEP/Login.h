@@ -5,7 +5,7 @@ using namespace std::experimental::filesystem;
 
 void gotoxy(int, int);
 
-	class gotomenu //мусоргный класс, чтобы переходить в главное меню.
+	class gotomenu //мусорный класс, чтобы переходить в главное меню.
 	{
 	public:
 		void go()
@@ -14,9 +14,8 @@ void gotoxy(int, int);
 			int gotx = 10;
 			gotoxy(30, ++gotx);
 			cout << "Ok. Go to main menu." << endl;
-			cout << endl;
-			cout << endl;
-			cout << "\t\t";
+			gotx = 12;
+			gotoxy(25, ++gotx);
 			system("pause");
 		}
 	};
@@ -33,9 +32,6 @@ void gotoxy(int, int);
 		string emptyFile = "emptyFile.txt"; //Хитрый, пустой файл благодаря которому мы можем проверять, можно ли открыть папку.(Существует ли она)
 		string testname = "testname.txt";
 		string testquantity = "testquantity.txt";
-
-		/*string UsersFolder = "UsersFolder";
-		string StudentsFile = "StudentsFile.txt";*/
 
 	public:
 		login() {};
@@ -56,7 +52,6 @@ void gotoxy(int, int);
 	public:
 		guest() {};
 		~guest() {};
-		/*void registration();*/
 
 		void dotask();
 		int getmark(int correct_answ, int done_answ);
@@ -381,7 +376,7 @@ void gotoxy(int, int);
 		unique_ptr<guest> gu(new guest);
 		cout << "Hello, please, enter your login and password" << endl;
 		cout << endl;
-		cout << "Login : "; // добавить в папку с пользователями, чтобы файл с админом не трогали.
+		cout << "Login : ";
 		cin >> gu->log;
 		string loginhash;
 		loginhash = md5(gu->log);
@@ -437,22 +432,24 @@ void gotoxy(int, int);
 			}
 			if (ras > 4)
 			{
-				//если попыток больше 5 выдать ошибку и отправить в меню
 				cout << "Sorry, but you had to much wrong attempts, try again later." << endl;
 				cout << "Perhaps the user with this login is already taken. Try to enter a different login" << endl;
 				system("pause");
 				exit(0);
-				/*mainmenu();*/
 			}
 		}
 		else
 		{
 			system("cls");
-			int s;
-			cout << "Account registration. Take the steps you need. Remember all data." << endl;
-			cout << "Replacement of data is possible when you confirm the necessary data." << endl;
-			cout << "Enter \"1\" to continue registration, or \"0\" to exit" << endl;
-			cin >> s;
+			int s = 0;
+			while (s != 1 && s != 2)
+			{
+				cout << "Account registration. Take the steps you need. Remember all data." << endl;
+				cout << "Replacement of data is possible when you confirm the necessary data." << endl;
+				cout << "Enter \"1\" to continue registration, or \"2\" to exit" << endl;
+				cin >> s;
+				system("cls");
+			}
 			if (s == 1)
 			{
 				bool ch1 = false;
@@ -464,8 +461,6 @@ void gotoxy(int, int);
 					cout << endl;
 					cout << "Login : ";
 					cin >> l;
-
-					/*string path = this->folder + "/" + md5(l) + ".txt";*/
 
 					string loginhash;
 					loginhash = md5(l);
@@ -487,15 +482,13 @@ void gotoxy(int, int);
 					cout << "Home address : ";
 					string address;
 					getline(cin, address);
-					ifstream i(gu->folder);
-					if (i.is_open())
-					{
-						break; // Возможна проблема
-					}
-					else
+					ifstream i(gu->folder + "/" + gu->emptyFile);
+					if (!i.is_open())
 					{
 						create_directory(gu->folder);
 						create_directory(gu->UserStat);
+						ofstream emp(gu->folder + "/" + gu->emptyFile);
+						emp.close();
 					}
 					i.close();
 					ifstream inf(gu->folder + "/" + loginhash + ".txt");
@@ -530,7 +523,7 @@ void gotoxy(int, int);
 					inf.close();
 				}
 			}
-			else
+			else if (s == 2)
 			{
 				exit(0);
 			}
@@ -611,7 +604,7 @@ void gotoxy(int, int);
 			cout << endl;
 			create_directory(ad->TestFolder);
 			ofstream ofs(ad->TestFolder + "/" + "category.txt");
-			ofs.close();//
+			ofs.close();
 		}
 		ifq.close();
 		bool ch2 = false;
@@ -1240,30 +1233,44 @@ void gotoxy(int, int);
 						cout << "Enter LOGIN to confirm" << endl;
 						string login;
 						cin >> login;
-						string logcheck;
-						logcheck = ad->folder + "/" + md5(login) + ".txt";
-
-						remove(logcheck);
-						mp.erase(key);
-						m.erase(key);
-						string p = ad->UserStat + "/" + login;
-						remove_all(p);
-						string p1 = ad->UserStat + "/" + "DatabaseStudents.txt";
-						string p2 = ad->UserStat + "/" + "UserInfo.txt";
-						ofstream of;
-						of.open(p1);
-						for (auto it = mp.begin(); it != mp.end(); ++it)
+						
+						cout << "Enter LOGIN to confirm again" << endl;
+						string login2;
+						cin >> login2;
+						if (login == login2)
 						{
-							of << it->first << endl << it->second << endl;
-						}
-						of.close();
+							string logcheck;
+							logcheck = ad->folder + "/" + md5(login) + ".txt";
 
-						of.open(p2);
-						for (auto it = mp.begin(); it != mp.end(); ++it)
-						{
-							of << it->first << endl << it->second << endl;
+							remove(logcheck);
+							mp.erase(key);
+							m.erase(key);
+							string p = ad->UserStat + "/" + login;
+							remove_all(p);
+							string p1 = ad->UserStat + "/" + "DatabaseStudents.txt";
+							string p2 = ad->UserStat + "/" + "UserInfo.txt";
+							ofstream of;
+							of.open(p1);
+							for (auto it = mp.begin(); it != mp.end(); ++it)
+							{
+								of << it->first << endl << it->second << endl;
+							}
+							of.close();
+
+							of.open(p2);
+							for (auto it = mp.begin(); it != mp.end(); ++it)
+							{
+								of << it->first << endl << it->second << endl;
+							}
+							of.close();
 						}
-						of.close();
+						else
+						{
+							cout << "Uncorrect login." << endl;
+							system("pause");
+							gotomenu g;
+							g.go();
+						}
 					}
 					else
 					{
