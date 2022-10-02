@@ -321,16 +321,16 @@ void gotoxy(int, int);
 	{
 		unique_ptr<guest> gu(new guest);
 		map <string, string> mp;
-		string loginq, passq, fioq;
-		cout << "Enter your login to change password" << endl;
-		string login;
-		cin >> login;
-		string logincheck = md5(login);
+		string loginq, passq, fioq, lttck;
+		ifstream ifq(ltt);
+		ifq >> lttck;
+		ifq.close();
+		string logincheck = md5(lttck);
 		string path = gu->folder + "/" + logincheck + ".txt";
 		ifstream ifs(path);
 		if (!ifs.is_open())
 		{
-			cout << "Uncorrect login." << endl;
+			cout << "File not found... Critical Error." << endl;
 			system("pause");
 		}
 		else
@@ -504,6 +504,9 @@ void gotoxy(int, int);
 					else
 					{
 						ch1 = true;
+						ofstream off(ltt);
+						off << gu->log;
+						off.close();
 						string path = gu->folder + "/" + loginhash + ".txt";
 						ofstream out(path);
 						out << loginhash << endl;
@@ -519,6 +522,7 @@ void gotoxy(int, int);
 						dout << tel << "\n" << fio << ". Login : " << l << "\n";
 						dout.close();
 						create_directory(gu->UserStat + "/" + l);
+
 					}
 					inf.close();
 				}
@@ -600,7 +604,7 @@ void gotoxy(int, int);
 		}
 		else
 		{
-			cout << "You have not added category yet. File has been added." << endl;
+			cout << "System have not added category yet. File has been added." << endl;
 			cout << endl;
 			create_directory(ad->TestFolder);
 			ofstream ofs(ad->TestFolder + "/" + "category.txt");
@@ -659,7 +663,7 @@ void gotoxy(int, int);
 		ifstream ifq(ad->TestFolder + "/" + "category.txt");
 		if (!ifq.is_open())
 		{
-			cout << "You have not added category yet." << endl;
+			cout << "System have not added category yet." << endl;
 			cout << "Do you want to add new category? (yes = 1 / no = 0)" << endl;
 			int yy;
 			cin >> yy;
@@ -798,7 +802,7 @@ void gotoxy(int, int);
 		if (!ifq.is_open())
 		{
 			
-			cout << "You have not added category yet." << endl;
+			cout << "System have not added category yet." << endl;
 			cout << "Do you want to add new category? (yes = 1 / no = 0)" << endl;
 			int yy;
 			cin >> yy;
@@ -852,7 +856,7 @@ void gotoxy(int, int);
 
 					if (!id.is_open())
 					{
-						cout << "You haven`t the test name folder. Do you want to add? ( yes = 1 / no = 0 )" << endl;
+						cout << "System haven`t the test name folder. Do you want to add? ( yes = 1 / no = 0 )" << endl;
 						int bb;
 						cin >> bb;
 						if (bb == 1)
@@ -953,7 +957,7 @@ void gotoxy(int, int);
 										}
 										else
 										{
-											cout << "Error, file haven`t been opened. Maybe you haven`t had a file." << endl;
+											cout << "Error, file haven`t been opened." << endl;
 											system("pause");
 										}
 									}
@@ -1026,7 +1030,7 @@ void gotoxy(int, int);
 			}
 			else
 			{
-				cout << "You have not added category yet." << endl;
+				cout << "System have not added category yet." << endl;
 				cout << "Do you want to add new category? (yes = 1 / no = 0)" << endl;
 				int yy;
 				cin >> yy;
@@ -1054,7 +1058,7 @@ void gotoxy(int, int);
 		ifstream ifq(ad->TestFolder + "/" + "category.txt");
 		if (!ifq.is_open())
 		{
-			cout << "You have not added category yet." << endl;
+			cout << "System have not added category yet." << endl;
 			system("pause");
 			gotomenu g;
 			g.go();
@@ -1175,7 +1179,7 @@ void gotoxy(int, int);
 			}
 			else
 			{
-				cout << "You have not added category yet." << endl;
+				cout << "System have not added category yet." << endl;
 				system("pause");
 				gotomenu g;
 				g.go();
@@ -1241,28 +1245,38 @@ void gotoxy(int, int);
 						{
 							string logcheck;
 							logcheck = ad->folder + "/" + md5(login) + ".txt";
-
-							remove(logcheck);
-							mp.erase(key);
-							m.erase(key);
-							string p = ad->UserStat + "/" + login;
-							remove_all(p);
-							string p1 = ad->UserStat + "/" + "DatabaseStudents.txt";
-							string p2 = ad->UserStat + "/" + "UserInfo.txt";
-							ofstream of;
-							of.open(p1);
-							for (auto it = mp.begin(); it != mp.end(); ++it)
+							ifstream ifr(logcheck);
+							if (ifr.is_open())
 							{
-								of << it->first << endl << it->second << endl;
-							}
-							of.close();
+								remove(logcheck);
+								mp.erase(key);
+								m.erase(key);
+								string p = ad->UserStat + "/" + login;
+								remove_all(p);
+								string p1 = ad->UserStat + "/" + "DatabaseStudents.txt";
+								string p2 = ad->UserStat + "/" + "UserInfo.txt";
+								ofstream of;
+								of.open(p1);
+								for (auto it = mp.begin(); it != mp.end(); ++it)
+								{
+									of << it->first << endl << it->second << endl;
+								}
+								of.close();
 
-							of.open(p2);
-							for (auto it = mp.begin(); it != mp.end(); ++it)
-							{
-								of << it->first << endl << it->second << endl;
+								of.open(p2);
+								for (auto it = mp.begin(); it != mp.end(); ++it)
+								{
+									of << it->first << endl << it->second << endl;
+								}
+								of.close();
 							}
-							of.close();
+							else
+							{
+								cout << "Users dont find." << endl;
+								system("pause");
+								gotomenu g;
+								g.go();
+							}
 						}
 						else
 						{
